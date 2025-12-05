@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحاضرات - مركز أسماء بنت أبي بكر</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for lectures page */
+        .lectures-page {
+            padding: 50px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .filter-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #2c5e8c;
+            background: transparent;
+            color: #2c5e8c;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #d4a550;
+            color: white;
+            border-color: #d4a550;
+        }
+        
+        .lectures-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .lecture-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .lecture-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .lecture-thumbnail {
+            height: 180px;
+            background: linear-gradient(45deg, #2c5e8c, #1a365d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+        }
+        
+        .lecture-type {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .lecture-content {
+            padding: 20px;
+        }
+        
+        .lecture-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .category-badge {
+            background: #e63946;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 50px;
+            color: #e63946;
+            background: #ffe6e6;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button onclick="changeLanguage('ar')" class="lang-btn active">العربية</button>
+        <button onclick="changeLanguage('en')" class="lang-btn">English</button>
+    </div>
+
+    <!-- Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1><i class="fas fa-mosque"></i> مركز أسماء بنت أبي بكر</h1>
+                <p class="subtitle">Asmaa Bint Abi Bakr Center</p>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> عن المركز</a></li>
+                <li><a href="lectures.html" class="active"><i class="fas fa-video"></i> المحاضرات</a></li>
+                <li><a href="pdfs.html"><i class="fas fa-file-pdf"></i> المكتبة</a></li>
+                <li><a href="subscribe.html"><i class="fas fa-envelope"></i> الاشتراك</a></li>
+                <li><a href="contact.html"><i class="fas fa-phone"></i> اتصل بنا</a></li>
+            </ul>
+            <div class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Lectures Page Content -->
+    <section class="lectures-page">
+        <h2 style="text-align: center; color: #2c5e8c; margin-bottom: 20px;">مكتبة المحاضرات والدروس</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">استمع إلى المحاضرات والدروس العلمية في مختلف التخصصات الشرعية</p>
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <h3 style="color: #2c5e8c; margin-bottom: 15px;">تصفية المحاضرات</h3>
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="showAll()">الكل</button>
+                <button class="filter-btn" onclick="showVideos()">
+                    <i class="fas fa-video"></i> مرئية
+                </button>
+                <button class="filter-btn" onclick="showAudio()">
+                    <i class="fas fa-headphones"></i> صوتية
+                </button>
+                <button class="filter-btn" onclick="filterByCategory('فقه')">فقه</button>
+                <button class="filter-btn" onclick="filterByCategory('عقيدة')">عقيدة</button>
+                <button class="filter-btn" onclick="filterByCategory('كتاب')">كتاب</button>
+                <button class="filter-btn" onclick="filterByCategory('قرآن')">قرآن</button>
+            </div>
+        </div>
+        
+        <!-- Lectures Container -->
+        <div id="lecturesContainer" class="lectures-grid">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                <p>جاري تحميل المحاضرات...</p>
+            </div>
+        </div>
+        
+        <!-- Instructions -->
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 40px;">
+            <h3 style="color: #2c5e8c; margin-bottom: 15px;">
+                <i class="fas fa-info-circle"></i> كيفية إضافة محاضرات جديدة
+            </h3>
+            <p>1. انشر المحاضرة على قناتك في YouTube</p>
+            <p>2. افتح ملف <code>data/lectures-ar.json</code> في VS Code</p>
+            <p>3. أضف رابط المحاضرة الجديدة بنفس الشكل الموجود</p>
+            <p>4. أضف الترجمة الإنجليزية في ملف <code>data/lectures-en.json</code></p>
+        </div>
+    </section>
+
+    <!-- SIMPLE WORKING JAVASCRIPT -->
+    <script>
+        // ========== SIMPLE LECTURE SYSTEM ==========
+        let allLectures = [];
+        let currentFilter = 'all';
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded, starting lecture system...');
+            loadLectures();
+        });
+        
+        // Load lectures from JSON file
+        async function loadLectures() {
+            console.log('Loading lectures...');
+            const container = document.getElementById('lecturesContainer');
+            
+            try {
+                // Try to load JSON file
+                const response = await fetch('data/lectures-ar.json');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load JSON file');
+                }
+                
+                const data = await response.json();
+                console.log('Lectures loaded:', data);
+                
+                allLectures = data;
+                showAll();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Show error message
+                container.innerHTML = `
+                    <div class="error-message" style="grid-column: 1/-1;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                        <h3>حدث خطأ في تحميل المحاضرات</h3>
+                        <p>تأكد من وجود ملف lectures-ar.json في مجلد data</p>
+                        <p>جاري استخدام بيانات تجريبية...</p>
+                    </div>
+                `;
+                
+                // Use sample data
+                allLectures = getSampleLectures();
+                setTimeout(() => showAll(), 1000);
+            }
+        }
+        
+        // Get sample lectures if JSON fails
+        function getSampleLectures() {
+            return [
+                {
+                    "title": "090. حادي الأرواح - الشيخ بشير أحمد هوتورو (حفظه الله)",
+                    "description": "شرح كتاب حادي الأرواح للشيخ بشير أحمد هوتورو حفظه الله",
+                    "duration": "21:19",
+                    "date": "28 نوفمبر 2025",
+                    "videoUrl": "https://www.youtube.com/watch?v=5V7z5jvxnBQ",
+                    "type": "video",
+                    "category": "كتاب",
+                    "speaker": "الشيخ بشير أحمد هوتورو"
+                },
+                {
+                    "title": "فقه الصلاة للمبتدئين",
+                    "description": "شرح مفصل لأحكام الصلاة مع الأدلة",
+                    "duration": "38:15",
+                    "date": "10 يناير 2024",
+                    "videoUrl": "#",
+                    "type": "video",
+                    "category": "فقه",
+                    "speaker": "د. عبدالله المصلح"
+                }
+            ];
+        }
+        
+        // Show all lectures
+        function showAll() {
+            console.log('Showing all lectures');
+            updateActiveButton('all');
+            displayLectures(allLectures);
+        }
+        
+        // Show only video lectures
+        function showVideos() {
+            console.log('Showing video lectures');
+            updateActiveButton('video');
+            const videos = allLectures.filter(lecture => lecture.type === 'video');
+            displayLectures(videos);
+        }
+        
+        // Show only audio lectures
+        function showAudio() {
+            console.log('Showing audio lectures');
+            updateActiveButton('audio');
+            const audio = allLectures.filter(lecture => lecture.type === 'audio');
+            displayLectures(audio);
+        }
+        
+        // Filter by category
+        function filterByCategory(category) {
+            console.log('Filtering by category:', category);
+            updateActiveButton(category);
+            const filtered = allLectures.filter(lecture => lecture.category === category);
+            displayLectures(filtered);
+        }
+        
+        // Update active button
+        function updateActiveButton(activeType) {
+            console.log('Updating active button:', activeType);
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Find and activate the correct button
+            buttons.forEach(btn => {
+                if (activeType === 'all' && btn.textContent.includes('الكل')) {
+                    btn.classList.add('active');
+                } else if (activeType === 'video' && btn.textContent.includes('مرئية')) {
+                    btn.classList.add('active');
+                } else if (activeType === 'audio' && btn.textContent.includes('صوتية')) {
+                    btn.classList.add('active');
+                } else if (btn.textContent.includes(activeType)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+        
+        // Display lectures in container
+        function displayLectures(lectures) {
+            console.log('Displaying lectures:', lectures.length);
+            const container = document.getElementById('lecturesContainer');
+            
+            if (!lectures || lectures.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; grid-column: 1/-1; padding: 50px;">
+                        <i class="fas fa-search" style="font-size: 3rem; color: #ccc;"></i>
+                        <h3 style="color: #666; margin-top: 20px;">لا توجد محاضرات في هذا القسم</h3>
+                        <p>سيتم إضافة المحاضرات قريباً بإذن الله</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = lectures.map((lecture, index) => `
+                <div class="lecture-card" style="animation: fadeIn 0.5s ease ${index * 0.1}s both;">
+                    <div class="lecture-thumbnail">
+                        ${lecture.type === 'video' ? 
+                            '<i class="fas fa-video" style="font-size: 3rem;"></i>' : 
+                            '<i class="fas fa-headphones" style="font-size: 3rem;"></i>'}
+                        <div class="lecture-type">
+                            ${lecture.type === 'video' ? 'مرئية' : 'صوتية'}
+                        </div>
+                    </div>
+                    <div class="lecture-content">
+                        <h3 style="color: #2c5e8c; margin-bottom: 10px;">${lecture.title}</h3>
+                        <p style="color: #666; margin-bottom: 15px; line-height: 1.6;">${lecture.description}</p>
+                        <div class="lecture-meta">
+                            <span><i class="far fa-clock"></i> ${lecture.duration}</span>
+                            <span><i class="far fa-calendar"></i> ${lecture.date}</span>
+                            <span class="category-badge">${lecture.category}</span>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            ${lecture.videoUrl ? `
+                                <a href="${lecture.videoUrl}" class="btn-primary" target="_blank" style="display: inline-block; margin-left: 10px;">
+                                    <i class="fas fa-play"></i> مشاهدة
+                                </a>
+                            ` : ''}
+                            ${lecture.audioUrl ? `
+                                <a href="${lecture.audioUrl}" class="btn-primary" target="_blank" style="display: inline-block; background: #4CAF50;">
+                                    <i class="fas fa-headphones"></i> استماع
+                                </a>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Add CSS animation if not already added
+            if (!document.querySelector('#lecture-animations')) {
+                const style = document.createElement('style');
+                style.id = 'lecture-animations';
+                style.textContent = `
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(20px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+        
+        // Debug: Log button clicks
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                console.log('Button clicked:', this.textContent.trim());
+            });
+        });
+    </script>
+    
+    <!-- Link to main script.js for language switching -->
+    <script src="script.js"></script>
+    
+    <!-- Debug script -->
+    <script>
+        // Debug: Check if everything is loading
+        console.log('=== DEBUG INFO ===');
+        console.log('Current page:', window.location.href);
+        console.log('JSON path:', 'data/lectures-ar.json');
+        
+        // Test JSON loading
+        fetch('data/lectures-ar.json')
+            .then(r => {
+                console.log('Fetch response status:', r.status);
+                return r.text();
+            })
+            .then(text => {
+                console.log('Raw JSON text (first 500 chars):', text.substring(0, 500));
+                try {
+                    const data = JSON.parse(text);
+                    console.log('JSON parsed successfully, lectures:', data.length);
+                } catch (e) {
+                    console.error('JSON parsing error:', e.message);
+                }
+            })
+            .catch(err => {
+                console.error('Fetch error:', err.message);
+            });
+    </script>
+</body>
+</html>

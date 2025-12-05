@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المكتبة - مركز أسماء بنت أبي بكر</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .pdf-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .pdf-card i {
+            font-size: 2.5rem;
+            color: #e63946;
+        }
+        
+        .pdf-card-content {
+            flex: 1;
+        }
+        
+        .pdf-card h4 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .pdf-card p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pdf-meta {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        
+        .category-badge {
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button onclick="changeLanguage('ar')" class="lang-btn active">العربية</button>
+        <button onclick="changeLanguage('en')" class="lang-btn">English</button>
+    </div>
+
+    <!-- Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1><i class="fas fa-mosque"></i> مركز أسماء بنت أبي بكر</h1>
+                <p class="subtitle">Asmaa Bint Abi Bakr Center</p>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> عن المركز</a></li>
+                <li><a href="lectures.html"><i class="fas fa-video"></i> المحاضرات</a></li>
+                <li><a href="pdfs.html" class="active"><i class="fas fa-file-pdf"></i> المكتبة</a></li>
+                <li><a href="subscribe.html"><i class="fas fa-envelope"></i> الاشتراك</a></li>
+                <li><a href="contact.html"><i class="fas fa-phone"></i> اتصل بنا</a></li>
+            </ul>
+            <div class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- PDF Library Content -->
+    <section class="features" style="padding-top: 50px;">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h2 id="library-title" style="text-align: center; margin-bottom: 30px;">المكتبة الإلكترونية</h2>
+            
+            <!-- PDFs Container -->
+            <div id="pdfsContainer">
+                <!-- Will be loaded by JavaScript -->
+            </div>
+            
+            <!-- How to Add PDFs -->
+            <div style="background: var(--light); padding: 20px; border-radius: 8px; margin-top: 40px;">
+                <h3 style="color: var(--primary); margin-bottom: 15px;"><i class="fas fa-question-circle"></i> كيفية  كتب جديدة</h3>
+                <div style="line-height: 1.8;">
+                    <p><strong>الخطوة 1:</strong>  Google Drive</p>
+                    
+                   
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+        // Add translations for PDFs page
+        if (typeof translations !== 'undefined') {
+            translations.ar = {
+                ...translations.ar,
+                "library-title": "المكتبة الإلكترونية"
+            };
+            
+            translations.en = {
+                ...translations.en,
+                "library-title": "Digital Library"
+            };
+        }
+    </script>
+</body>
+</html>

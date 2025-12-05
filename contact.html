@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اتصل بنا - مركز أسماء بنت أبي بكر</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 5%;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .contact-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .contact-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .map-container {
+            margin-top: 40px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .contact-info {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .contact-info p {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button onclick="changeLanguage('ar')" class="lang-btn active">العربية</button>
+        <button onclick="changeLanguage('en')" class="lang-btn">English</button>
+    </div>
+
+    <!-- Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1><i class="fas fa-mosque"></i> مركز أسماء بنت أبي بكر</h1>
+                <p class="subtitle">Asmaa Bint Abi Bakr Center</p>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> عن المركز</a></li>
+                <li><a href="lectures.html"><i class="fas fa-video"></i> المحاضرات</a></li>
+                <li><a href="pdfs.html"><i class="fas fa-file-pdf"></i> المكتبة</a></li>
+                <li><a href="subscribe.html"><i class="fas fa-envelope"></i> الاشتراك</a></li>
+                <li><a href="contact.html" class="active"><i class="fas fa-phone"></i> اتصل بنا</a></li>
+            </ul>
+            <div class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contact Page Content -->
+    <section class="contact-container">
+        <h2 id="contact-title">اتصل بنا</h2>
+        <p id="contact-subtitle" style="text-align: center; color: #666; margin-bottom: 30px;">نحن هنا للإجابة على استفساراتكم وتلقي مقترحاتكم</p>
+        
+        <!-- Contact Cards -->
+        <div class="contact-grid">
+            <div class="contact-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3 id="address-title">العنوان</h3>
+                <p id="address-text">Hotoro western by-pass, Behind Sadan filling station, Tarauni l.g.a Kano, Nigeria</p>
+            </div>
+            
+            <div class="contact-card">
+                <i class="fas fa-phone"></i>
+                <h3 id="phone-title">الهاتف</h3>
+                <p>+234 803 537 0015</p>
+                <p id="phone-text">متاح خلال ساعات الدوام</p>
+            </div>
+            
+            <div class="contact-card">
+                <i class="fas fa-envelope"></i>
+                <h3 id="email-title">البريد الإلكتروني</h3>
+                <p>asmaacenter@email.com</p>
+                <p id="email-text">نرد خلال 24 ساعة</p>
+            </div>
+            
+            <div class="contact-card">
+                <i class="fas fa-clock"></i>
+                <h3 id="hours-title">ساعات الدوام</h3>
+                <p id="hours-text">السبت - الخميس: 8:00 ص - 6:00 م</p>
+                <p id="friday-hours">الجمعة: 10:00 ص - 12:00 م</p>
+            </div>
+        </div>
+        
+        <!-- Contact Form -->
+        <div style="background: white; padding: 30px; border-radius: 8px; margin-top: 40px;">
+            <h3 style="text-align: center; color: var(--primary); margin-bottom: 25px;" id="form-title">أرسل رسالة</h3>
+            
+            <form id="contactForm" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
+                <input type="hidden" name="_subject" value="Contact Form - Asmaa Center">
+                <input type="hidden" name="_language" value="ar">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label for="contact_name" id="name-label">الاسم الكامل</label>
+                        <input type="text" id="contact_name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact_email" id="email-label">البريد الإلكتروني</label>
+                        <input type="email" id="contact_email" name="email" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact_subject" id="subject-label">الموضوع</label>
+                    <input type="text" id="contact_subject" name="subject" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact_message" id="message-label">الرسالة</label>
+                    <textarea id="contact_message" name="message" rows="5" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;" id="submit-btn">
+                    إرسال الرسالة
+                </button>
+            </form>
+        </div>
+        
+        <!-- Google Maps Embed -->
+        <div class="map-container">
+            <h3 style="text-align: center; color: var(--primary); margin: 30px 0 20px;" id="location-title">موقع المركز</h3>
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d62346.67050185509!2d8.520125545726996!3d12.022995509933804!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sHotoro%20western%20by-pass%2C%20Behind%20Sadan%20filling%20station%2C%20Tarauni%20l.g.a%20Kano%2C%20Nigeria!5e0!3m2!1sen!2sng!4v1764867139275!5m2!1sen!2sng" 
+                width="600"
+                 height="450" 
+                 style="border:0;" 
+                 allowfullscreen="" 
+                 loading="lazy" r
+                 eferrerpolicy="no-referrer-when-downgrade">
+              
+            </iframe>
+            
+            <div class="contact-info">
+                <h4 id="directions-title">كيفية الوصول إلى المركز:</h4>
+                <p>1. اتجه إلى Hotoro western by-pass</p>
+                <p>2. ابحث عن محطة سدان للوقود (Sadan filling station)</p>
+                <p>3. المركز يقع خلف المحطة مباشرة</p>
+                <p>4. المنطقة: Tarauni Local Government Area, Kano</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (same as other pages) -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>مركز أسماء بنت أبي بكر</h3>
+                <p>نشر العلم الشرعي وفق منهج السلف الصالح</p>
+            </div>
+            <div class="footer-section">
+                <h3>روابط سريعة</h3>
+                <ul>
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="lectures.html">المحاضرات</a></li>
+                    <li><a href="pdfs.html">المكتبة</a></li>
+                    <li><a href="contact.html">اتصل بنا</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>تواصل معنا</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Hotoro western by-pass, Behind Sadan filling station, Tarauni l.g.a Kano, Nigeria</p>
+                <p><i class="fas fa-phone"></i> +234 803 537 0015</p>
+                <p><i class="fas fa-envelope"></i> asmaaislamcenter@email.com</p>
+                <div class="social-icons">
+                    <a href="https://wa.me/2348148301746"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 مركز أسماء بنت أبي بكر. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Add translations for contact page
+        if (typeof translations !== 'undefined') {
+            translations.ar = {
+                ...translations.ar,
+                "contact-title": "اتصل بنا",
+                "contact-subtitle": "نحن هنا للإجابة على استفساراتكم وتلقي مقترحاتكم",
+                "address-title": "العنوان",
+                "address-text": "Hotoro western by-pass, Behind Sadan filling station, Tarauni l.g.a Kano, Nigeria",
+                "phone-title": "الهاتف",
+                "phone-text": "متاح خلال ساعات الدوام",
+                "email-title": "البريد الإلكتروني",
+                "email-text": "نرد خلال 24 ساعة",
+                "hours-title": "ساعات الدوام",
+                "hours-text": "السبت - الخميس: 8:00 ص - 6:00 م",
+                "friday-hours": "الجمعة: 10:00 ص - 12:00 م",
+                "form-title": "أرسل رسالة",
+                "name-label": "الاسم الكامل",
+                "email-label": "البريد الإلكتروني",
+                "subject-label": "الموضوع",
+                "message-label": "الرسالة",
+                "submit-btn": "إرسال الرسالة",
+                "location-title": "موقع المركز",
+                "directions-title": "كيفية الوصول إلى المركز:"
+            };
+            
+            translations.en = {
+                ...translations.en,
+                "contact-title": "Contact Us",
+                "contact-subtitle": "We are here to answer your inquiries and receive your suggestions",
+                "address-title": "Address",
+                "address-text": "Hotoro western by-pass, Behind Sadan filling station, Tarauni l.g.a Kano, Nigeria",
+                "phone-title": "Phone",
+                "phone-text": "Available during working hours",
+                "email-title": "Email",
+                "email-text": "We respond within 24 hours",
+                "hours-title": "Working Hours",
+                "hours-text": "Saturday - Thursday: 8:00 AM - 6:00 PM",
+                "friday-hours": "Friday: 10:00 AM - 12:00 PM",
+                "form-title": "Send a Message",
+                "name-label": "Full Name",
+                "email-label": "Email Address",
+                "subject-label": "Subject",
+                "message-label": "Message",
+                "submit-btn": "Send Message",
+                "location-title": "Center Location",
+                "directions-title": "How to reach the center:"
+            };
+        }
+        
+        // Handle contact form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contactForm');
+            
+            if (contactForm) {
+                contactForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const submitBtn = contactForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.textContent;
+                    
+                    // Show loading
+                    submitBtn.textContent = currentLang === 'ar' ? 'جاري الإرسال...' : 'Sending...';
+                    submitBtn.disabled = true;
+                    
+                    try {
+                        const formData = new FormData(contactForm);
+                        
+                        const response = await fetch(contactForm.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            alert(currentLang === 'ar' 
+                                ? '✅ تم إرسال رسالتك بنجاح! سوف نتواصل معك قريباً.' 
+                                : '✅ Your message has been sent successfully! We will contact you soon.');
+                            
+                            contactForm.reset();
+                        } else {
+                            throw new Error('Form submission failed');
+                        }
+                        
+                    } catch (error) {
+                        alert(currentLang === 'ar' 
+                            ? '❌ حدث خطأ أثناء الإرسال. الرجاء المحاولة مرة أخرى.' 
+                            : '❌ An error occurred. Please try again.');
+                        
+                        console.error('Contact form error:', error);
+                    } finally {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

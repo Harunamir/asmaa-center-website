@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عن المركز - مركز أسماء بنت أبي بكر</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button onclick="changeLanguage('ar')" class="lang-btn active">العربية</button>
+        <button onclick="changeLanguage('en')" class="lang-btn">English</button>
+    </div>
+
+    <!-- Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1><i class="fas fa-mosque"></i> مركز أسماء بنت أبي بكر</h1>
+                <p class="subtitle">Asmaa Bint Abi Bakr Center</p>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="about.html" class="active"><i class="fas fa-info-circle"></i> عن المركز</a></li>
+                <li><a href="lectures.html"><i class="fas fa-video"></i> المحاضرات</a></li>
+                <li><a href="pdfs.html"><i class="fas fa-file-pdf"></i> المكتبة</a></li>
+                <li><a href="subscribe.html"><i class="fas fa-envelope"></i> الاشتراك</a></li>
+                <li><a href="contact.html"><i class="fas fa-phone"></i> اتصل بنا</a></li>
+            </ul>
+            <div class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- About Content -->
+    <section class="features" style="padding-top: 50px;">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h2 id="about-title">عن مركز أسماء بنت أبي بكر</h2>
+            
+            <div style="background: white; padding: 30px; border-radius: 8px; margin-bottom: 30px;">
+                <h3 style="color: var(--primary); margin-bottom: 15px;">رسالتنا</h3>
+                <p id="mission-text" style="line-height: 1.8; margin-bottom: 20px;">
+                    مركز أسماء بنت أبي بكر هو مركز علمي دعوي يهدف إلى نشر العلم الشرعي 
+                    وفق منهج أهل السنة والجماعة، مستمداً تسميته من الصحابية الجليلة 
+                    أسماء بنت أبي بكر الصديق رضي الله عنهما، والتي كانت مثالاً في الصبر 
+                    والثبات على الحق.
+                </p>
+                
+                <h3 style="color: var(--primary); margin-bottom: 15px;">أهدافنا</h3>
+                <ul style="line-height: 1.8; padding-right: 20px;">
+                    <li id="goal1">نشر العلم الشرعي الصحيح</li>
+                    <li id="goal2">تعليم القرآن الكريم وعلومه</li>
+                    <li id="goal3">تدريس السنة النبوية وفقهها</li>
+                    <li id="goal4">تأهيل طلبة العلم والدعاة</li>
+                    <li id="goal5">خدمة المجتمع الإسلامي</li>
+                </ul>
+            </div>
+            
+            <div style="background: white; padding: 30px; border-radius: 8px;">
+                <h3 style="color: var(--primary); margin-bottom: 15px;">وسائلنا</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-video"></i>
+                        <h3>الدروس المرئية</h3>
+                        <p>بث مباشر وتسجيل المحاضرات والدروس</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-book"></i>
+                        <h3>المكتبة العلمية</h3>
+                        <p>توفير الكتب والرسائل العلمية</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h3>الدورات التعليمية</h3>
+                        <p>برامج منهجية لطلب العلم</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Contact Information -->
+<div style="background: var(--light); padding: 30px; border-radius: 8px; margin-top: 40px;">
+    <h3 style="color: var(--primary); margin-bottom: 20px;">معلومات التواصل</h3>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        <div>
+            <h4><i class="fas fa-map-marker-alt"></i> عنوان المركز</h4>
+            <p>Hotoro western by-pass, Behind Sadan filling station, Tarauni l.g.a Kano, Nigeria</p>
+        </div>
+        
+        <div>
+            <h4><i class="fas fa-phone"></i> الهاتف</h4>
+            <p>+234 803 537 0015</p>
+            <p><small>متاح خلال ساعات الدوام الرسمية</small></p>
+        </div>
+        
+        <div>
+            <h4><i class="fas fa-clock"></i> ساعات الدوام</h4>
+            <p>السبت - الخميس: 8:00 ص - 6:00 م</p>
+            <p>الجمعة: 10:00 ص - 12:00 م</p>
+        </div>
+    </div>
+</div>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+        // Add English translations for about page
+        if (typeof translations !== 'undefined') {
+            translations.ar = {
+                ...translations.ar,
+                "about-title": "عن مركز أسماء بنت أبي بكر",
+                "mission-text": "مركز أسماء بنت أبي بكر هو مركز علمي دعوي يهدف إلى نشر العلم الشرعي وفق منهج أهل السنة والجماعة، مستمداً تسميته من الصحابية الجليلة أسماء بنت أبي بكر الصديق رضي الله عنهما، والتي كانت مثالاً في الصبر والثبات على الحق.",
+                "goal1": "نشر العلم الشرعي الصحيح",
+                "goal2": "تعليم القرآن الكريم وعلومه",
+                "goal3": "تدريس السنة النبوية وفقهها",
+                "goal4": "تأهيل طلبة العلم والدعاة",
+                "goal5": "خدمة المجتمع الإسلامي"
+            };
+            
+            translations.en = {
+                ...translations.en,
+                "about-title": "About Asmaa Bint Abi Bakr Center",
+                "mission-text": "Asmaa Bint Abi Bakr Center is a scientific da'wah center aimed at spreading Islamic knowledge according to the methodology of Ahlus Sunnah wal Jama'ah. It derives its name from the noble companion Asmaa bint Abi Bakr Al-Siddiq (may Allah be pleased with them), who was an example of patience and steadfastness on the truth.",
+                "goal1": "Spreading correct Islamic knowledge",
+                "goal2": "Teaching the Quran and its sciences",
+                "goal3": "Teaching the Prophetic Sunnah and its jurisprudence",
+                "goal4": "Qualifying students of knowledge and callers to Islam",
+                "goal5": "Serving the Muslim community"
+            };
+        }
+    </script>
+</body>
+</html>

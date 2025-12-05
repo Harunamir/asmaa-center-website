@@ -1,0 +1,53 @@
+[
+    {
+        "title": "090. حادي الأرواح - الشيخ بشير أحمد هوتورو (حفظه الله)",
+        "description": "شرح كتاب حادي الأرواح للشيخ بشير أحمد هوتورو حفظه الله",
+        "duration": "21:19",
+        "date": "28 نوفمبر 2025",
+        "videoUrl": "https://www.youtube.com/watch?v=5V7z5jvxnBQ",
+        "type": "video",
+        "category": "كتاب",
+        "speaker": "الشيخ بشير أحمد هوتورو",
+        "language": "ar"
+    },
+    {
+        "title": "فقه الصلاة للمبتدئين",
+        "description": "شرح مفصل لأحكام الصلاة مع الأدلة",
+        "duration": "38:15",
+        "date": "10 يناير 2024",
+        "videoUrl": "https://youtube.com/watch?v=example2",
+        "type": "video",
+        "category": "فقه",
+        "speaker": "د. عبدالله المصلح"
+    },
+    {
+        "title": "تلاوة سورة البقرة",
+        "description": "تلاوة مجودة من سورة البقرة",
+        "duration": "25:10",
+        "date": "8 يناير 2024",
+        "audioUrl": "https://soundcloud.com/example3",
+        "type": "audio",
+        "category": "قرآن",
+        "speaker": "الشيخ أحمد العجمي"
+    },
+    {
+        "title": "الشفاعة يوم القيامة",
+        "description": "شرح أنواع الشفاعة وأهلها",
+        "duration": "50:30",
+        "date": "5 يناير 2024",
+        "videoUrl": "https://youtube.com/watch?v=example4",
+        "type": "video",
+        "category": "عقيدة",
+        "speaker": "د. ناصر العمر"
+    },
+    {
+        "title": "تفسير سورة الفاتحة",
+        "description": "تفسير مختصر لأعظم سورة في القرآن",
+        "duration": "35:15",
+        "date": "1 يناير 2024",
+        "videoUrl": "https://youtube.com/watch?v=example6",
+        "type": "video",
+        "category": "قرآن",
+        "speaker": "د. عبدالرحمن السعدي"
+    }
+]
