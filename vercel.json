@@ -1,1 +1,8 @@
-{[{"SOURCE":"/(.*)","DESTINATION":"/"}]}
+{ 
+  "routes": [ 
+    { 
+      "src": "/", 
+      "dest": "/" 
+    } 
+  ] 
+} 
