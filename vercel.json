@@ -1,10 +1,1 @@
-{
-  "rewrites": [
-    {
-      "source": "/about",
-      "destination": "/about.html"
-    }
-    // Add other rewrites as needed
-  ]
-  // Optionally include redirects, headers, etc., but no "routes"
-}
+{[{"SOURCE":"/(.*)","DESTINATION":"/"}]}
