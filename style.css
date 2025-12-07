@@ -391,3 +391,54 @@ footer {
     color: white;
     border-color: var(--primary);
 }
+/* Registration Page Styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Print styles for schedule */
+@media print {
+    .navbar,
+    .language-switcher,
+    .mobile-menu-btn,
+    .print-btn,
+    footer {
+        display: none !important;
+    }
+    
+    .schedule-container {
+        padding: 20px;
+        margin: 0;
+    }
+    
+    .day-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}

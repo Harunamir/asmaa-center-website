@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Saturday",
+    "date": "Jan 15",
+    "sessions": [
+      {
+        "time": "8:00 AM",
+        "title": "Quran Tafsir",
+        "description": "Tafsir of Surah Al-Baqarah - Verses 1-50",
+        "teacher": "Dr. Muhammad Al-Arefe",
+        "type": "quran",
+        "location": "Main Hall"
+      },
+      {
+        "time": "4:00 PM",
+        "title": "Fiqh of Purification",
+        "description": "Lessons on purification rulings for beginners",
+        "teacher": "Dr. Abdullah Al-Mosleh",
+        "type": "lesson",
+        "location": "Hall 1"
+      }
+    ]
+  }
+]

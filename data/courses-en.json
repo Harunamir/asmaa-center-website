@@ -1,0 +1,36 @@
+[
+  {
+    "id": "quran",
+    "title": "Quran Memorization Course",
+    "subtitle": "For Men and Women",
+    "description": "Intensive program for Quran memorization with Tajweed and Tafsir, under the supervision of specialized scholars",
+    "features": [
+      "Practical Tajweed",
+      "Simplified Tafsir",
+      "Continuous revision",
+      "Certified certificate",
+      "Individual follow-up"
+    ],
+    "duration": "6 months",
+    "price": "Free",
+    "seats": 30,
+    "startDate": "February 1, 2024"
+  },
+  {
+    "id": "fiqh",
+    "title": "Fiqh Course for Beginners",
+    "subtitle": "Level 1",
+    "description": "Simplified explanation of purification, prayer, fasting and zakat rulings according to Maliki school",
+    "features": [
+      "Simplified explanation",
+      "Practical examples",
+      "Assistant book",
+      "Periodic tests",
+      "Completion certificate"
+    ],
+    "duration": "3 months",
+    "price": "5,000 Naira",
+    "seats": 25,
+    "startDate": "February 15, 2024"
+  }
+]

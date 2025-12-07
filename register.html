@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التسجيل في الدورات - مركز أسماء بنت أبي بكر</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .registration-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 5%;
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .course-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .course-header {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .course-header h3 {
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .course-content {
+            padding: 25px;
+        }
+        
+        .course-features {
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .course-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .course-features i {
+            color: var(--accent);
+            margin-left: 10px;
+        }
+        
+        .course-price {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--accent);
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .registration-steps {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 8px;
+            margin: 40px 0;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .step-number {
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-left: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #eee;
+            margin: 30px 0;
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--accent);
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .payment-method {
+            border: 2px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-method:hover,
+        .payment-method.selected {
+            border-color: var(--accent);
+            background: var(--secondary);
+        }
+        
+        .payment-method i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button onclick="changeLanguage('ar')" class="lang-btn active">العربية</button>
+        <button onclick="changeLanguage('en')" class="lang-btn">English</button>
+    </div>
+
+    <!-- Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1><i class="fas fa-mosque"></i> مركز أسماء بنت أبي بكر</h1>
+                <p class="subtitle">Asmaa Bint Abi Bakr Center</p>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> عن المركز</a></li>
+                <li><a href="lectures.html"><i class="fas fa-video"></i> المحاضرات</a></li>
+                <li><a href="schedule.html"><i class="fas fa-calendar-alt"></i> الجدول الأسبوعي</a></li>
+                <li><a href="register.html" class="active"><i class="fas fa-user-plus"></i> التسجيل</a></li>
+                <li><a href="pdfs.html"><i class="fas fa-file-pdf"></i> المكتبة</a></li>
+                <li><a href="contact.html"><i class="fas fa-phone"></i> اتصل بنا</a></li>
+            </ul>
+            <div class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Registration Page Content -->
+    <section class="registration-container">
+        <h2 id="registration-title">التسجيل في الدورات والبرامج</h2>
+        <p id="registration-subtitle" style="text-align: center; color: #666; margin-bottom: 40px;">
+            انضم إلى دوراتنا التعليمية وبرامجنا التخصصية لتطوير معرفتك الشرعية
+        </p>
+        
+        <!-- Available Courses -->
+        <h3 id="courses-title" style="color: var(--primary); margin-bottom: 20px;">الدورات المتاحة حالياً</h3>
+        <div class="courses-grid" id="coursesContainer">
+            <!-- Courses will be loaded from JSON -->
+        </div>
+        
+        <!-- Registration Steps -->
+        <div class="registration-steps">
+            <h3 id="steps-title" style="color: var(--primary); margin-bottom: 20px;">خطوات التسجيل</h3>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <h4 id="step1-title">اختر الدورة المناسبة</h4>
+                    <p id="step1-text">اختر من بين الدورات المتاحة التي تناسب مستواك واهتماماتك</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <h4 id="step2-title">املأ استمارة التسجيل</h4>
+                    <p id="step2-text">املأ البيانات المطلوبة بدقة لضمان صحة التسجيل</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <h4 id="step3-title">الدفع الإلكتروني</h4>
+                    <p id="step3-text">ادفع رسوم الدورة عبر وسائل الدفع المتاحة</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div>
+                    <h4 id="step4-title">تأكيد التسجيل</h4>
+                    <p id="step4-text">ستصلك رسالة تأكيد بالبريد الإلكتروني مع تفاصيل الدورة</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Registration Form -->
+        <div style="background: white; padding: 30px; border-radius: 8px; margin-top: 40px;">
+            <h3 style="text-align: center; color: var(--primary); margin-bottom: 30px;" id="form-title">استمارة التسجيل</h3>
+            
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('personal')" id="tab-personal">البيانات الشخصية</div>
+                <div class="tab" onclick="showTab('course')" id="tab-course">اختيار الدورة</div>
+                <div class="tab" onclick="showTab('payment')" id="tab-payment">الدفع</div>
+            </div>
+            
+            <!-- Personal Info Tab -->
+            <div class="tab-content active" id="personal-tab">
+                <form id="registrationForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">الاسم الكامل</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fatherName">اسم الأب</label>
+                            <input type="text" id="fatherName" name="fatherName" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">البريد الإلكتروني</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">رقم الهاتف</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age">العمر</label>
+                            <input type="number" id="age" name="age" min="10" max="80" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">الجنس</label>
+                            <select id="gender" name="gender" required>
+                                <option value="">اختر</option>
+                                <option value="male">ذكر</option>
+                                <option value="female">أنثى</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">العنوان التفصيلي</label>
+                        <textarea id="address" name="address" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="education">المستوى التعليمي</label>
+                        <select id="education" name="education" required>
+                            <option value="">اختر</option>
+                            <option value="school">طالب مدرسة</option>
+                            <option value="university">طالب جامعة</option>
+                            <option value="graduate">خريج</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="btn-primary" onclick="showTab('course')">
+                        التالي <i class="fas fa-arrow-left"></i>
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Course Selection Tab -->
+            <div class="tab-content" id="course-tab">
+                <div class="form-group">
+                    <label for="courseSelect">اختر الدورة</label>
+                    <select id="courseSelect" name="course" required>
+                        <option value="">اختر الدورة</option>
+                        <!-- Will be populated by JavaScript -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="scheduleSelect">المواعيد المتاحة</label>
+                    <select id="scheduleSelect" name="schedule" required>
+                        <option value="">اختر الموعد</option>
+                        <option value="morning">الصباح (8 ص - 12 م)</option>
+                        <option value="evening">المساء (4 م - 8 م)</option>
+                        <option value="weekend">عطلة نهاية الأسبوع</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>طريقة الدراسة</label>
+                    <div style="display: flex; gap: 20px; margin-top: 10px;">
+                        <label>
+                            <input type="radio" name="studyType" value="in-person" checked>
+                            حضور مباشر في المركز
+                        </label>
+                        <label>
+                            <input type="radio" name="studyType" value="online">
+                            دراسة أونلاين
+                        </label>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                    <button type="button" class="lang-btn" onclick="showTab('personal')">
+                        <i class="fas fa-arrow-right"></i> السابق
+                    </button>
+                    <button type="button" class="btn-primary" onclick="showTab('payment')">
+                        التالي <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Payment Tab -->
+            <div class="tab-content" id="payment-tab">
+                <h4 style="color: var(--primary); margin-bottom: 20px;">اختر طريقة الدفع</h4>
+                
+                <div class="payment-methods">
+                    <div class="payment-method" onclick="selectPayment('bank')">
+                        <i class="fas fa-university"></i>
+                        <h4>التحويل البنكي</h4>
+                    </div>
+                    <div class="payment-method" onclick="selectPayment('mobile')">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h4>المحفظة الإلكترونية</h4>
+                    </div>
+                    <div class="payment-method" onclick="selectPayment('cash')">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <h4>الدفع في المركز</h4>
+                    </div>
+                </div>
+                
+                <div id="bankDetails" style="display: none; margin-top: 20px; padding: 20px; background: var(--light); border-radius: 8px;">
+                    <h5>معلومات الحساب البنكي:</h5>
+                    <p>اسم البنك: بنك نيجيريا المركزي</p>
+                    <p>رقم الحساب: 1234567890</p>
+                    <p>اسم المستفيد: مركز أسماء بنت أبي بكر</p>
+                    <p>يرجى إرسال صورة التحويل إلى: asmaacenter@email.com</p>
+                </div>
+                
+                <div id="mobilePayment" style="display: none; margin-top: 20px; padding: 20px; background: var(--light); border-radius: 8px;">
+                    <h5>دفع عبر المحفظة الإلكترونية:</h5>
+                    <p>رقم المحفظة: 08148301746</p>
+                    <p>الاسم: مركز أسماء بنت أبي بكر</p>
+                    <p>يرجى إرسال إشعار الدفع إلى: asmaacenter@email.com</p>
+                </div>
+                
+                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                    <button type="button" class="lang-btn" onclick="showTab('course')">
+                        <i class="fas fa-arrow-right"></i> السابق
+                    </button>
+                    <button type="submit" class="btn-primary" style="background: #28a745;">
+                        <i class="fas fa-check"></i> تأكيد التسجيل
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FAQs -->
+        <div style="background: var(--light); padding: 30px; border-radius: 8px; margin-top: 40px;">
+            <h3 id="faq-title" style="color: var(--primary); margin-bottom: 20px;">الأسئلة الشائعة</h3>
+            
+            <div class="faq-item" style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 15px;">
+                <h4 style="color: var(--primary); cursor: pointer;" onclick="toggleFAQ(1)">
+                    <i class="fas fa-chevron-down"></i> ما هي شروط التسجيل؟
+                </h4>
+                <p id="faq1" style="display: none; margin-top: 10px; color: #666;">
+                    شروط التسجيل: أن يكون عمر المتقدم 15 سنة فما فوق، القدرة على القراءة والكتابة، الرغبة في التعلم.
+                </p>
+            </div>
+            
+            <div class="faq-item" style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 15px;">
+                <h4 style="color: var(--primary); cursor: pointer;" onclick="toggleFAQ(2)">
+                    <i class="fas fa-chevron-down"></i> هل يمكنني الاسترداد في حالة الانسحاب؟
+                </h4>
+                <p id="faq2" style="display: none; margin-top: 10px; color: #666;">
+                    يمكن استرداد 70% من الرسوم في حالة الانسحاب قبل أسبوع من بداية الدورة.
+                </p>
+            </div>
+            
+            <div class="faq-item" style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 15px;">
+                <h4 style="color: var(--primary); cursor: pointer;" onclick="toggleFAQ(3)">
+                    <i class="fas fa-chevron-down"></i> هل توجد منح دراسية؟
+                </h4>
+                <p id="faq3" style="display: none; margin-top: 10px; color: #666;">
+                    نعم، توجد منح دراسية للمتفوقين والمحتاجين. يمكن التقديم عبر المركز.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (same as other pages) -->
+    <!-- Copy footer from index.html -->
+
+    <script src="script.js"></script>
+    <script>
+        // Add translations for registration page
+        if (typeof translations !== 'undefined') {
+            translations.ar = {
+                ...translations.ar,
+                "registration-title": "التسجيل في الدورات والبرامج",
+                "registration-subtitle": "انضم إلى دوراتنا التعليمية وبرامجنا التخصصية لتطوير معرفتك الشرعية",
+                "courses-title": "الدورات المتاحة حالياً",
+                "steps-title": "خطوات التسجيل",
+                "step1-title": "اختر الدورة المناسبة",
+                "step1-text": "اختر من بين الدورات المتاحة التي تناسب مستواك واهتماماتك",
+                "step2-title": "املأ استمارة التسجيل",
+                "step2-text": "املأ البيانات المطلوبة بدقة لضمان صحة التسجيل",
+                "step3-title": "الدفع الإلكتروني",
+                "step3-text": "ادفع رسوم الدورة عبر وسائل الدفع المتاحة",
+                "step4-title": "تأكيد التسجيل",
+                "step4-text": "ستصلك رسالة تأكيد بالبريد الإلكتروني مع تفاصيل الدورة",
+                "form-title": "استمارة التسجيل",
+                "faq-title": "الأسئلة الشائعة"
+            };
+            
+            translations.en = {
+                ...translations.en,
+                "registration-title": "Course Registration",
+                "registration-subtitle": "Join our educational courses and specialized programs to develop your Islamic knowledge",
+                "courses-title": "Currently Available Courses",
+                "steps-title": "Registration Steps",
+                "step1-title": "Choose Suitable Course",
+                "step1-text": "Choose from available courses that suit your level and interests",
+                "step2-title": "Fill Registration Form",
+                "step2-text": "Fill required data accurately to ensure correct registration",
+                "step3-title": "Online Payment",
+                "step3-text": "Pay course fees through available payment methods",
+                "step4-title": "Registration Confirmation",
+                "step4-text": "You will receive confirmation email with course details",
+                "form-title": "Registration Form",
+                "faq-title": "Frequently Asked Questions"
+            };
+        }
+        
+        // Load courses from JSON
+        async function loadCourses() {
+            try {
+                const lang = localStorage.getItem('language') || 'ar';
+                const response = await fetch(`data/courses-${lang}.json`);
+                const courses = await response.json();
+                
+                // Display courses
+                const container = document.getElementById('coursesContainer');
+                if (container) {
+                    container.innerHTML = courses.map(course => `
+                        <div class="course-card">
+                            <div class="course-header">
+                                <h3>${course.title}</h3>
+                                <p>${course.subtitle}</p>
+                            </div>
+                            <div class="course-content">
+                                <p>${course.description}</p>
+                                <ul class="course-features">
+                                    ${course.features.map(feature => `
+                                        <li><i class="fas fa-check-circle"></i> ${feature}</li>
+                                    `).join('')}
+                                </ul>
+                                <div class="course-price">${course.price}</div>
+                                <button class="btn-primary" style="width: 100%;" onclick="selectCourse('${course.id}')">
+                                    <i class="fas fa-user-plus"></i> سجل الآن
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                // Populate course dropdown
+                const courseSelect = document.getElementById('courseSelect');
+                if (courseSelect) {
+                    courseSelect.innerHTML = `
+                        <option value="">اختر الدورة</option>
+                        ${courses.map(course => `
+                            <option value="${course.id}">${course.title} - ${course.price}</option>
+                        `).join('')}
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error loading courses:', error);
+                // Load sample data
+                loadSampleCourses();
+            }
+        }
+        
+        function loadSampleCourses() {
+            const sampleCourses = [
+                {
+                    id: "quran",
+                    title: "دورة حفظ القرآن الكريم",
+                    subtitle: "للرجال والنساء",
+                    description: "برنامج مكثف لحفظ القرآن الكريم مع التجويد والتفسير",
+                    features: ["تجويد", "تفسير مبسط", "مراجعة مستمرة", "شهادة معتمدة"],
+                    price: "مجانية"
+                },
+                {
+                    id: "fiqh",
+                    title: "دورة الفقه للمبتدئين",
+                    subtitle: "المستوى الأول",
+                    description: "شرح مبسط لأحكام الطهارة والصلاة والصيام والزكاة",
+                    features: ["شرح مبسط", "أمثلة عملية", "كتاب مساعد", "اختبارات دورية"],
+                    price: "5,000 نيرة"
+                },
+                {
+                    id: "aqeedah",
+                    title: "دورة العقيدة الإسلامية",
+                    subtitle: "للجميع",
+                    description: "دراسة أصول العقيدة الإسلامية وفق منهج أهل السنة والجماعة",
+                    features: ["أصول العقيدة", "الرد على الشبهات", "مراجع معتمدة", "شهادة إتمام"],
+                    price: "3,000 نيرة"
+                }
+            ];
+            
+            const container = document.getElementById('coursesContainer');
+            if (container) {
+                container.innerHTML = sampleCourses.map(course => `
+                    <div class="course-card">
+                        <div class="course-header">
+                            <h3>${course.title}</h3>
+                            <p>${course.subtitle}</p>
+                        </div>
+                        <div class="course-content">
+                            <p>${course.description}</p>
+                            <ul class="course-features">
+                                ${course.features.map(feature => `
+                                    <li><i class="fas fa-check-circle"></i> ${feature}</li>
+                                `).join('')}
+                            </ul>
+                            <div class="course-price">${course.price}</div>
+                            <button class="btn-primary" style="width: 100%;" onclick="selectCourse('${course.id}')">
+                                <i class="fas fa-user-plus"></i> سجل الآن
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        // Tab navigation
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Activate tab button
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+        
+        // Payment method selection
+        function selectPayment(method) {
+            // Remove selected class from all
+            document.querySelectorAll('.payment-method').forEach(pm => {
+                pm.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked
+            event.target.closest('.payment-method').classList.add('selected');
+            
+            // Show details
+            document.getElementById('bankDetails').style.display = 'none';
+            document.getElementById('mobilePayment').style.display = 'none';
+            
+            if (method === 'bank') {
+                document.getElementById('bankDetails').style.display = 'block';
+            } else if (method === 'mobile') {
+                document.getElementById('mobilePayment').style.display = 'block';
+            }
+        }
+        
+        // Select course
+        function selectCourse(courseId) {
+            document.getElementById('courseSelect').value = courseId;
+            showTab('course');
+        }
+        
+        // Toggle FAQ
+        function toggleFAQ(num) {
+            const faq = document.getElementById(`faq${num}`);
+            const icon = event.target.querySelector('i');
+            
+            if (faq.style.display === 'none' || !faq.style.display) {
+                faq.style.display = 'block';
+                icon.className = 'fas fa-chevron-up';
+            } else {
+                faq.style.display = 'none';
+                icon.className = 'fas fa-chevron-down';
+            }
+        }
+        
+        // Handle form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCourses();
+            
+            const form = document.getElementById('registrationForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form data
+                    const formData = {
+                        fullName: document.getElementById('fullName').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        course: document.getElementById('courseSelect').value,
+                        schedule: document.getElementById('scheduleSelect').value,
+                        timestamp: new Date().toLocaleString('ar-SA')
+                    };
+                    
+                    // Save to localStorage (temporary)
+                    localStorage.setItem('lastRegistration', JSON.stringify(formData));
+                    
+                    // Show success message
+                    alert('تم إرسال طلب التسجيل بنجاح! سنتواصل معك قريباً لتأكيد التسجيل.');
+                    
+                    // Reset form
+                    form.reset();
+                    showTab('personal');
+                    
+                    // You can also send to Formspree or your backend here
+                });
+            }
+        });
+    </script>
+</body>
+</html>

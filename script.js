@@ -13,7 +13,12 @@ const translations = {
         "feature3-text": "مجموعة من الكتب والرسائل العلمية بصيغة PDF",
         "feature4-title": "ترجمة متعددة اللغات",
         "feature4-text": "الترجمة بين العربية والإنجليزية",
-        "recent-title": "آخر المحاضرات"
+        "recent-title": "آخر المحاضرات",
+         "nav-schedule": "الجدول الأسبوعي",
+        "nav-register": "التسجيل",
+        "schedule-page-title": "الجدول الأسبوعي",
+        "register-page-title": "التسجيل في الدورات"
+
     },
     en: {
         "welcome-title": "Welcome to Asmaa Bint Abi Bakr Center",
@@ -28,8 +33,14 @@ const translations = {
         "feature3-text": "A collection of books and research papers in PDF format",
         "feature4-title": "Multilingual Translation",
         "feature4-text": "Translation between Arabic and English",
-        "recent-title": "Recent Lectures"
+        "recent-title": "Recent Lectures",
+         "nav-schedule": "Weekly Schedule",
+        "nav-register": "Registration",
+        "schedule-page-title": "Weekly Schedule",
+        "register-page-title": "Course Registration"
+
     }
+    
 };
 
 // Load language from localStorage or default to Arabic

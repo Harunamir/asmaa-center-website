@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجدول الأسبوعي - مركز أسماء بنت أبي بكر</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .schedule-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 5%;
+        }
+        
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .day-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .day-header {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .day-header h3 {
+            color: white;
+            margin-bottom: 5px;
+        }
+        
+        .day-header .date {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .sessions-list {
+            padding: 20px;
+        }
+        
+        .session-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-right: 4px solid var(--accent);
+            background: var(--light);
+            border-radius: 4px;
+        }
+        
+        .session-time {
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .session-time i {
+            margin-left: 8px;
+        }
+        
+        .session-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .session-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        
+        .session-type {
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .calendar-view {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 40px 0;
+            overflow-x: auto;
+        }
+        
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        
+        .calendar-table th {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .calendar-table td {
+            padding: 15px;
+            border: 1px solid #eee;
+            vertical-align: top;
+        }
+        
+        .time-slot {
+            background: var(--light);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        
+        .current-day {
+            background: #e8f5e9;
+            border: 2px solid #4CAF50;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .print-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button onclick="changeLanguage('ar')" class="lang-btn active">العربية</button>
+        <button onclick="changeLanguage('en')" class="lang-btn">English</button>
+    </div>
+
+    <!-- Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1><i class="fas fa-mosque"></i> مركز أسماء بنت أبي بكر</h1>
+                <p class="subtitle">Asmaa Bint Abi Bakr Center</p>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> عن المركز</a></li>
+                <li><a href="lectures.html"><i class="fas fa-video"></i> المحاضرات</a></li>
+                <li><a href="schedule.html" class="active"><i class="fas fa-calendar-alt"></i> الجدول الأسبوعي</a></li>
+                <li><a href="register.html"><i class="fas fa-user-plus"></i> التسجيل</a></li>
+                <li><a href="pdfs.html"><i class="fas fa-file-pdf"></i> المكتبة</a></li>
+                <li><a href="contact.html"><i class="fas fa-phone"></i> اتصل بنا</a></li>
+            </ul>
+            <div class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Schedule Page Content -->
+    <section class="schedule-container">
+        <h2 id="schedule-title">الجدول الأسبوعي للمحاضرات والدروس</h2>
+        <p id="schedule-subtitle" style="text-align: center; color: #666; margin-bottom: 30px;">
+            جدول مواعيد المحاضرات والدروس الأسبوعية في المركز
+        </p>
+        
+        <!-- Current Week Info -->
+        <div style="background: var(--light); padding: 20px; border-radius: 8px; margin-bottom: 30px; text-align: center;">
+            <h3 id="week-title" style="color: var(--primary); margin-bottom: 10px;">الأسبوع الحالي</h3>
+            <p id="week-dates" style="font-size: 1.1rem; color: #666;">15 يناير - 21 يناير 2024</p>
+            <p id="next-update" style="color: #888; margin-top: 10px;">سيتم تحديث الجدول كل يوم أحد</p>
+        </div>
+        
+        <!-- Filters -->
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterSchedule('all')" id="filter-all">الكل</button>
+            <button class="filter-btn" onclick="filterSchedule('lecture')" id="filter-lecture">محاضرات</button>
+            <button class="filter-btn" onclick="filterSchedule('lesson')" id="filter-lesson">دروس</button>
+            <button class="filter-btn" onclick="filterSchedule('quran')" id="filter-quran">قرآن</button>
+            <button class="filter-btn" onclick="filterSchedule('women')" id="filter-women">حلقات النساء</button>
+        </div>
+        
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #2c5e8c;"></div>
+                <span>محاضرة عامة</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #28a745;"></div>
+                <span>درس تخصصي</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #d4a550;"></div>
+                <span>حلقة قرآن</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e63946;"></div>
+                <span>حلقة نساء</span>
+            </div>
+        </div>
+        
+        <!-- Day Cards View -->
+        <div class="schedule-grid" id="scheduleContainer">
+            <!-- Will be loaded from JSON -->
+        </div>
+        
+        <!-- Calendar View -->
+        <div class="calendar-view">
+            <h3 style="text-align: center; color: var(--primary); margin-bottom: 20px;" id="calendar-title">عرض تقويم الأسبوع</h3>
+            <table class="calendar-table" id="calendarTable">
+                <thead>
+                    <tr>
+                        <th>الوقت</th>
+                        <th>السبت</th>
+                        <th>الأحد</th>
+                        <th>الإثنين</th>
+                        <th>الثلاثاء</th>
+                        <th>الأربعاء</th>
+                        <th>الخميس</th>
+                        <th>الجمعة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Important Notes -->
+        <div style="background: #fff3cd; border-right: 4px solid #ffc107; padding: 20px; border-radius: 4px; margin-top: 30px;">
+            <h4 style="color: #856404; margin-bottom: 15px;">
+                <i class="fas fa-exclamation-circle"></i> ملاحظات مهمة
+            </h4>
+            <ul style="color: #856404; line-height: 1.8;">
+                <li id="note1">جميع الأوقات بتوقيت نيجيريا (GMT+1)</li>
+                <li id="note2">يرجى الحضور قبل بدء المحاضرة بـ 10 دقائق</li>
+                <li id="note3">الدروس الخاصة بالنساء تقام في قاعة النساء الخاصة</li>
+                <li id="note4">يمكن تغيير المواعظ في حالات الضرورة</li>
+                <li id="note5">للاستفسار: 08148301746</li>
+            </ul>
+        </div>
+        
+        <!-- Live Status -->
+        <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 30px; text-align: center;">
+            <h4 style="color: var(--primary); margin-bottom: 15px;">
+                <i class="fas fa-broadcast-tower"></i> حالة البث المباشر الآن
+            </h4>
+            <div id="liveStatus" style="display: inline-block; padding: 10px 20px; background: #28a745; color: white; border-radius: 20px;">
+                <i class="fas fa-circle"></i> لا يوجد بث مباشر حالياً
+            </div>
+            <p style="margin-top: 15px; color: #666;">
+                <a href="lectures.html" style="color: var(--accent);">
+                    <i class="fas fa-video"></i> مشاهدة المحاضرات المسجلة
+                </a>
+            </p>
+        </div>
+        
+        <button class="print-btn" onclick="printSchedule()">
+            <i class="fas fa-print"></i> طباعة الجدول
+        </button>
+    </section>
+
+    <!-- Footer (same as other pages) -->
+
+    <script src="script.js"></script>
+    <script>
+        // Add translations for schedule page
+        if (typeof translations !== 'undefined') {
+            translations.ar = {
+                ...translations.ar,
+                "schedule-title": "الجدول الأسبوعي للمحاضرات والدروس",
+                "schedule-subtitle": "جدول مواعيد المحاضرات والدروس الأسبوعية في المركز",
+                "week-title": "الأسبوع الحالي",
+                "week-dates": "15 يناير - 21 يناير 2024",
+                "next-update": "سيتم تحديث الجدول كل يوم أحد",
+                "calendar-title": "عرض تقويم الأسبوع",
+                "note1": "جميع الأوقات بتوقيت نيجيريا (GMT+1)",
+                "note2": "يرجى الحضور قبل بدء المحاضرة بـ 10 دقائق",
+                "note3": "الدروس الخاصة بالنساء تقام في قاعة النساء الخاصة",
+                "note4": "يمكن تغيير المواعظ في حالات الضرورة",
+                "note5": "للاستفسار: 08148301746"
+            };
+            
+            translations.en = {
+                ...translations.en,
+                "schedule-title": "Weekly Lectures Schedule",
+                "schedule-subtitle": "Weekly schedule of lectures and lessons at the center",
+                "week-title": "Current Week",
+                "week-dates": "January 15 - 21, 2024",
+                "next-update": "Schedule updates every Sunday",
+                "calendar-title": "Weekly Calendar View",
+                "note1": "All times are Nigeria time (GMT+1)",
+                "note2": "Please arrive 10 minutes before lecture starts",
+                "note3": "Women's classes are held in the special women's hall",
+                "note4": "Schedule may change in case of necessity",
+                "note5": "For inquiry: 08148301746"
+            };
+        }
+        
+        // Load schedule data
+        async function loadSchedule() {
+            try {
+                const lang = localStorage.getItem('language') || 'ar';
+                const response = await fetch(`data/schedule-${lang}.json`);
+                const schedule = await response.json();
+                displaySchedule(schedule);
+                populateCalendar(schedule);
+            } catch (error) {
+                console.error('Error loading schedule:', error);
+                // Load sample schedule
+                loadSampleSchedule();
+            }
+        }
+        
+        function displaySchedule(schedule) {
+            const container = document.getElementById('scheduleContainer');
+            if (!container) return;
+            
+            // Get today's day in Arabic
+            const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            const today = new Date().getDay(); // 0 = Sunday, 6 = Saturday
+            const todayIndex = today === 6 ? 0 : today + 1; // Adjust for Arabic week starting Saturday
+            
+            container.innerHTML = schedule.map((day, index) => {
+                const isToday = index === todayIndex;
+                
+                return `
+                    <div class="day-card ${isToday ? 'current-day' : ''}">
+                        <div class="day-header">
+                            <h3>${day.name}</h3>
+                            <div class="date">${day.date}</div>
+                            ${isToday ? '<div style="margin-top: 5px; font-size: 0.8rem;">(اليوم)</div>' : ''}
+                        </div>
+                        <div class="sessions-list">
+                            ${day.sessions.map(session => `
+                                <div class="session-item" data-type="${session.type}">
+                                    <div class="session-time">
+                                        <i class="far fa-clock"></i> ${session.time}
+                                    </div>
+                                    <div class="session-title">${session.title}</div>
+                                    <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">${session.description}</p>
+                                    <div class="session-meta">
+                                        <span><i class="fas fa-user"></i> ${session.teacher}</span>
+                                        <span class="session-type" style="background: ${getTypeColor(session.type)}">
+                                            ${getTypeName(session.type)}
+                                        </span>
+                                    </div>
+                                    ${session.location ? `
+                                        <div style="margin-top: 10px; color: #666; font-size: 0.9rem;">
+                                            <i class="fas fa-map-marker-alt"></i> ${session.location}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function populateCalendar(schedule) {
+            const tableBody = document.querySelector('#calendarTable tbody');
+            if (!tableBody) return;
+            
+            // Define time slots (7 AM to 9 PM)
+            const timeSlots = [
+                '8:00 ص', '9:00 ص', '10:00 ص', '11:00 ص', 
+                '12:00 م', '1:00 م', '2:00 م', '3:00 م', 
+                '4:00 م', '5:00 م', '6:00 م', '7:00 م', '8:00 م'
+            ];
+            
+            // Create time slots rows
+            let calendarHTML = '';
+            
+            timeSlots.forEach(time => {
+                calendarHTML += `<tr>`;
+                calendarHTML += `<td style="font-weight: bold; background: var(--light);">${time}</td>`;
+                
+                // For each day (Saturday to Friday)
+                schedule.forEach(day => {
+                    // Find sessions at this time
+                    const sessionsAtTime = day.sessions.filter(session => 
+                        session.time.includes(time.split(':')[0]) // Simple match
+                    );
+                    
+                    calendarHTML += `<td>`;
+                    sessionsAtTime.forEach(session => {
+                        calendarHTML += `
+                            <div class="time-slot" style="border-right: 3px solid ${getTypeColor(session.type)}">
+                                <div style="font-weight: bold;">${session.title}</div>
+                                <div style="font-size: 0.8rem; color: #666;">${session.teacher}</div>
+                            </div>
+                        `;
+                    });
+                    calendarHTML += `</td>`;
+                });
+                
+                calendarHTML += `</tr>`;
+            });
+            
+            tableBody.innerHTML = calendarHTML;
+        }
+        
+        function loadSampleSchedule() {
+            const sampleSchedule = [
+                {
+                    name: "السبت",
+                    date: "15 يناير",
+                    sessions: [
+                        {
+                            time: "8:00 ص",
+                            title: "تفسير القرآن",
+                            description: "تفسير سورة البقرة",
+                            teacher: "د. محمد العريفي",
+                            type: "quran",
+                            location: "القاعة الرئيسية"
+                        },
+                        {
+                            time: "4:00 م",
+                            title: "فقه الطهارة",
+                            description: "دروس في أحكام الطهارة",
+                            teacher: "د. عبدالله المصلح",
+                            type: "lesson",
+                            location: "القاعة 1"
+                        }
+                    ]
+                },
+                {
+                    name: "الأحد",
+                    date: "16 يناير",
+                    sessions: [
+                        {
+                            time: "10:00 ص",
+                            title: "محاضرة العقيدة",
+                            description: "أركان الإيمان",
+                            teacher: "د. ناصر العمر",
+                            type: "lecture",
+                            location: "القاعة الرئيسية"
+                        }
+                    ]
+                },
+                {
+                    name: "الإثنين",
+                    date: "17 يناير",
+                    sessions: [
+                        {
+                            time: "2:00 م",
+                            title: "حفظ القرآن للنساء",
+                            description: "حفظ جزء عم",
+                            teacher: "أ. فاطمة أحمد",
+                            type: "women",
+                            location: "قاعة النساء"
+                        }
+                    ]
+                },
+                {
+                    name: "الثلاثاء",
+                    date: "18 يناير",
+                    sessions: [
+                        {
+                            time: "6:00 م",
+                            title: "السيرة النبوية",
+                            description: "حياة النبي صلى الله عليه وسلم",
+                            teacher: "د. محمد العريفي",
+                            type: "lecture",
+                            location: "القاعة الرئيسية"
+                        }
+                    ]
+                },
+                {
+                    name: "الأربعاء",
+                    date: "19 يناير",
+                    sessions: [
+                        {
+                            time: "8:00 ص",
+                            title: "تلاوة القرآن",
+                            description: "تلاوة مجودة",
+                            teacher: "الشيخ أحمد العجمي",
+                            type: "quran",
+                            location: "القاعة الرئيسية"
+                        }
+                    ]
+                },
+                {
+                    name: "الخميس",
+                    date: "20 يناير",
+                    sessions: [
+                        {
+                            time: "4:00 م",
+                            title: "فقه الصلاة",
+                            description: "أحكام الصلاة كاملة",
+                            teacher: "د. عبدالله المصلح",
+                            type: "lesson",
+                            location: "القاعة 1"
+                        }
+                    ]
+                },
+                {
+                    name: "الجمعة",
+                    date: "21 يناير",
+                    sessions: [
+                        {
+                            time: "1:00 م",
+                            title: "خطبة الجمعة",
+                            description: "خطبة الجمعة الأسبوعية",
+                            teacher: "د. محمد العريفي",
+                            type: "lecture",
+                            location: "المسجد"
+                        }
+                    ]
+                }
+            ];
+            
+            displaySchedule(sampleSchedule);
+            populateCalendar(sampleSchedule);
+        }
+        
+        function getTypeColor(type) {
+            const colors = {
+                'lecture': '#2c5e8c',
+                'lesson': '#28a745',
+                'quran': '#d4a550',
+                'women': '#e63946',
+                'special': '#6f42c1'
+            };
+            return colors[type] || '#6c757d';
+        }
+        
+        function getTypeName(type) {
+            const names = {
+                'lecture': 'محاضرة',
+                'lesson': 'درس',
+                'quran': 'قرآن',
+                'women': 'نساء',
+                'special': 'خاص'
+            };
+            return names[type] || type;
+        }
+        
+        function filterSchedule(type) {
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`filter-${type}`).classList.add('active');
+            
+            // Show/hide sessions
+            document.querySelectorAll('.session-item').forEach(item => {
+                if (type === 'all' || item.dataset.type === type) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        function printSchedule() {
+            window.print();
+        }
+        
+        // Check for live sessions
+        function checkLiveStatus() {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentDay = now.getDay();
+            
+            // Mock live check - you can replace with real logic
+            const isLive = currentHour >= 16 && currentHour <= 18 && currentDay === 2; // Tuesday 4-6 PM
+            
+            const statusElement = document.getElementById('liveStatus');
+            if (isLive) {
+                statusElement.innerHTML = '<i class="fas fa-circle" style="color: #ff0000;"></i> بث مباشر الآن';
+                statusElement.style.background = '#dc3545';
+            } else {
+                statusElement.innerHTML = '<i class="fas fa-circle"></i> لا يوجد بث مباشر حالياً';
+                statusElement.style.background = '#28a745';
+            }
+        }
+        
+        // Update date display
+        function updateWeekDates() {
+            const now = new Date();
+            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay() + 1)); // Start Monday
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            
+            const options = { day: 'numeric', month: 'long' };
+            const startDate = startOfWeek.toLocaleDateString('ar-SA', options);
+            const endDate = endOfWeek.toLocaleDateString('ar-SA', options);
+            
+            const weekDatesElement = document.getElementById('week-dates');
+            if (weekDatesElement) {
+                weekDatesElement.textContent = `${startDate} - ${endDate}`;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSchedule();
+            checkLiveStatus();
+            updateWeekDates();
+            
+            // Update live status every minute
+            setInterval(checkLiveStatus, 60000);
+        });
+    </script>
+</body>
+</html>
