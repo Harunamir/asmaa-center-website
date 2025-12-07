@@ -261,7 +261,7 @@
         <!-- Available Courses -->
         <h3 id="courses-title" style="color: var(--primary); margin-bottom: 20px;">الدورات المتاحة حالياً</h3>
         <div class="courses-grid" id="coursesContainer">
-            <!-- Courses will be loaded from JavaScript -->
+            <!-- Courses will be loaded from JSON -->
         </div>
         
         <!-- Registration Steps -->
@@ -317,7 +317,7 @@
             </div>
             
             <!-- Form Starts Here -->
-            <form id="registrationForm" action="https://formspree.io/f/xrbykjvz" method="POST">
+            <form id="registrationForm">
                 <!-- Personal Info Tab -->
                 <div class="tab-content active" id="personal-tab">
                     <div class="form-row">
@@ -491,15 +491,6 @@
                         </button>
                     </div>
                 </div>
-                
-                <!-- Formspree Honeypot (to prevent spam) -->
-                <input type="text" name="_gotcha" style="display:none">
-                
-                <!-- Subject for Formspree emails -->
-                <input type="hidden" name="_subject" value="طلب تسجيل جديد - مركز أسماء بنت أبي بكر">
-                
-                <!-- Reply-to email -->
-                <input type="hidden" name="_replyto" id="replyToEmail">
             </form>
         </div>
         
@@ -566,61 +557,131 @@
     </footer>
 
     <script>
+        // Add translations for registration page
+        if (typeof translations === 'undefined') {
+            var translations = {};
+        }
+        
+        translations.ar = {
+            ...translations.ar,
+            "registration-title": "التسجيل في الدورات والبرامج",
+            "registration-subtitle": "انضم إلى دوراتنا التعليمية وبرامجنا التخصصية لتطوير معرفتك الشرعية",
+            "courses-title": "الدورات المتاحة حالياً",
+            "steps-title": "خطوات التسجيل",
+            "step1-title": "اختر الدورة المناسبة",
+            "step1-text": "اختر من بين الدورات المتاحة التي تناسب مستواك واهتماماتك",
+            "step2-title": "املأ استمارة التسجيل",
+            "step2-text": "املأ البيانات المطلوبة بدقة لضمان صحة التسجيل",
+            "step3-title": "الدفع الإلكتروني",
+            "step3-text": "ادفع رسوم الدورة عبر وسائل الدفع المتاحة",
+            "step4-title": "تأكيد التسجيل",
+            "step4-text": "ستصلك رسالة تأكيد بالبريد الإلكتروني مع تفاصيل الدورة",
+            "form-title": "استمارة التسجيل",
+            "faq-title": "الأسئلة الشائعة"
+        };
+        
+        translations.en = {
+            ...translations.en,
+            "registration-title": "Course Registration",
+            "registration-subtitle": "Join our educational courses and specialized programs to develop your Islamic knowledge",
+            "courses-title": "Currently Available Courses",
+            "steps-title": "Registration Steps",
+            "step1-title": "Choose Suitable Course",
+            "step1-text": "Choose from available courses that suit your level and interests",
+            "step2-title": "Fill Registration Form",
+            "step2-text": "Fill required data accurately to ensure correct registration",
+            "step3-title": "Online Payment",
+            "step3-text": "Pay course fees through available payment methods",
+            "step4-title": "Registration Confirmation",
+            "step4-text": "You will receive confirmation email with course details",
+            "form-title": "Registration Form",
+            "faq-title": "Frequently Asked Questions"
+        };
+        
         // Global variables
         let selectedPaymentMethod = '';
         
-        // Load courses on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            loadCourses();
-            setupFormValidation();
-        });
-        
-        // Load courses from JSON or use sample data
+        // Load courses from JSON
         async function loadCourses() {
             try {
-                // Try to load from JSON file
-                const response = await fetch('data/courses-ar.json');
+                const lang = localStorage.getItem('language') || 'ar';
+                const response = await fetch(`data/courses-${lang}.json`);
                 const courses = await response.json();
-                displayCourses(courses);
+                
+                // Display courses
+                const container = document.getElementById('coursesContainer');
+                if (container) {
+                    container.innerHTML = courses.map(course => `
+                        <div class="course-card">
+                            <div class="course-header">
+                                <h3>${course.title}</h3>
+                                <p>${course.subtitle}</p>
+                            </div>
+                            <div class="course-content">
+                                <p>${course.description}</p>
+                                <ul class="course-features">
+                                    ${course.features.map(feature => `
+                                        <li><i class="fas fa-check-circle"></i> ${feature}</li>
+                                    `).join('')}
+                                </ul>
+                                <div class="course-price">${course.price}</div>
+                                <button class="btn-primary" style="width: 100%;" onclick="selectCourse('${course.id}')">
+                                    <i class="fas fa-user-plus"></i> سجل الآن
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                // Populate course dropdown
+                const courseSelect = document.getElementById('courseSelect');
+                if (courseSelect) {
+                    courseSelect.innerHTML = `
+                        <option value="">اختر الدورة</option>
+                        ${courses.map(course => `
+                            <option value="${course.id}">${course.title} - ${course.price}</option>
+                        `).join('')}
+                    `;
+                }
+                
             } catch (error) {
-                // If JSON file doesn't exist, use sample data
-                console.log('Using sample courses data');
-                const sampleCourses = [
-                    {
-                        id: "quran",
-                        title: "دورة حفظ القرآن الكريم",
-                        subtitle: "للرجال والنساء",
-                        description: "برنامج مكثف لحفظ القرآن الكريم مع التجويد والتفسير",
-                        features: ["تجويد", "تفسير مبسط", "مراجعة مستمرة", "شهادة معتمدة"],
-                        price: "مجانية"
-                    },
-                    {
-                        id: "fiqh",
-                        title: "دورة الفقه للمبتدئين",
-                        subtitle: "المستوى الأول",
-                        description: "شرح مبسط لأحكام الطهارة والصلاة والصيام والزكاة",
-                        features: ["شرح مبسط", "أمثلة عملية", "كتاب مساعد", "اختبارات دورية"],
-                        price: "5,000 نيرة"
-                    },
-                    {
-                        id: "aqeedah",
-                        title: "دورة العقيدة الإسلامية",
-                        subtitle: "للجميع",
-                        description: "دراسة أصول العقيدة الإسلامية وفق منهج أهل السنة والجماعة",
-                        features: ["أصول العقيدة", "الرد على الشبهات", "مراجع معتمدة", "شهادة إتمام"],
-                        price: "3,000 نيرة"
-                    }
-                ];
-                displayCourses(sampleCourses);
+                console.error('Error loading courses:', error);
+                // Load sample data
+                loadSampleCourses();
             }
         }
         
-        function displayCourses(courses) {
-            const container = document.getElementById('coursesContainer');
-            const courseSelect = document.getElementById('courseSelect');
+        function loadSampleCourses() {
+            const sampleCourses = [
+                {
+                    id: "quran",
+                    title: "دورة حفظ القرآن الكريم",
+                    subtitle: "للرجال والنساء",
+                    description: "برنامج مكثف لحفظ القرآن الكريم مع التجويد والتفسير",
+                    features: ["تجويد", "تفسير مبسط", "مراجعة مستمرة", "شهادة معتمدة"],
+                    price: "مجانية"
+                },
+                {
+                    id: "fiqh",
+                    title: "دورة الفقه للمبتدئين",
+                    subtitle: "المستوى الأول",
+                    description: "شرح مبسط لأحكام الطهارة والصلاة والصيام والزكاة",
+                    features: ["شرح مبسط", "أمثلة عملية", "كتاب مساعد", "اختبارات دورية"],
+                    price: "5,000 نيرة"
+                },
+                {
+                    id: "aqeedah",
+                    title: "دورة العقيدة الإسلامية",
+                    subtitle: "للجميع",
+                    description: "دراسة أصول العقيدة الإسلامية وفق منهج أهل السنة والجماعة",
+                    features: ["أصول العقيدة", "الرد على الشبهات", "مراجع معتمدة", "شهادة إتمام"],
+                    price: "3,000 نيرة"
+                }
+            ];
             
+            const container = document.getElementById('coursesContainer');
             if (container) {
-                container.innerHTML = courses.map(course => `
+                container.innerHTML = sampleCourses.map(course => `
                     <div class="course-card">
                         <div class="course-header">
                             <h3>${course.title}</h3>
@@ -642,10 +703,12 @@
                 `).join('');
             }
             
+            // Populate course dropdown with sample data
+            const courseSelect = document.getElementById('courseSelect');
             if (courseSelect) {
                 courseSelect.innerHTML = `
                     <option value="">اختر الدورة</option>
-                    ${courses.map(course => `
+                    ${sampleCourses.map(course => `
                         <option value="${course.id}">${course.title} - ${course.price}</option>
                     `).join('')}
                 `;
@@ -666,6 +729,8 @@
             
             // Show selected tab
             document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Activate tab button
             document.getElementById(`tab-${tabName}`).classList.add('active');
         }
         
@@ -674,10 +739,12 @@
             selectedPaymentMethod = method;
             document.getElementById('paymentMethod').value = method;
             
-            // Update UI
+            // Remove selected class from all
             document.querySelectorAll('.payment-method').forEach(pm => {
                 pm.classList.remove('selected');
             });
+            
+            // Add selected class to clicked
             document.getElementById(`${method}Payment`).classList.add('selected');
             
             // Show details
@@ -693,6 +760,7 @@
                 document.getElementById('cashDetails').style.display = 'block';
             }
             
+            // Clear payment error
             document.getElementById('paymentError').style.display = 'none';
         }
         
@@ -719,31 +787,45 @@
         // Validate personal tab
         function validatePersonalTab() {
             let isValid = true;
-            document.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
             
-            const fields = [
-                { id: 'fullName', error: 'fullNameError', validator: value => value.trim().length >= 2 },
-                { id: 'fatherName', error: 'fatherNameError', validator: value => value.trim().length >= 2 },
-                { id: 'email', error: 'emailError', validator: value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) },
-                { id: 'phone', error: 'phoneError', validator: value => /^[0-9]{10,15}$/.test(value) },
-                { id: 'age', error: 'ageError', validator: value => value >= 15 && value <= 80 },
-                { id: 'gender', error: 'genderError', validator: value => value !== '' },
-                { id: 'address', error: 'addressError', validator: value => value.trim().length >= 10 },
-                { id: 'education', error: 'educationError', validator: value => value !== '' }
-            ];
+            // Reset errors
+            document.querySelectorAll('.error-message').forEach(error => {
+                error.style.display = 'none';
+            });
             
-            fields.forEach(field => {
-                const element = document.getElementById(field.id);
-                if (!field.validator(element.value)) {
-                    document.getElementById(field.error).style.display = 'block';
+            // Validate required fields
+            const requiredFields = ['fullName', 'fatherName', 'email', 'phone', 'age', 'gender', 'address', 'education'];
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                const errorElement = document.getElementById(`${fieldId}Error`);
+                
+                if (!field.value.trim()) {
+                    errorElement.style.display = 'block';
                     isValid = false;
+                } else if (fieldId === 'email' && !isValidEmail(field.value)) {
+                    errorElement.style.display = 'block';
+                    isValid = false;
+                } else if (fieldId === 'phone' && !isValidPhone(field.value)) {
+                    errorElement.style.display = 'block';
+                    isValid = false;
+                } else if (fieldId === 'age') {
+                    const age = parseInt(field.value);
+                    if (age < 15 || age > 80) {
+                        errorElement.style.display = 'block';
+                        isValid = false;
+                    }
                 }
             });
             
             if (isValid) {
                 showTab('course');
-                // Set reply-to email for Formspree
-                document.getElementById('replyToEmail').value = document.getElementById('email').value;
+            } else {
+                // Scroll to first error
+                const firstError = document.querySelector('.error-message[style*="display: block"]');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
             }
             
             return isValid;
@@ -752,141 +834,218 @@
         // Validate course tab
         function validateCourseTab() {
             let isValid = true;
-            document.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
             
-            if (!document.getElementById('courseSelect').value) {
+            // Reset errors
+            document.querySelectorAll('.error-message').forEach(error => {
+                error.style.display = 'none';
+            });
+            
+            // Validate course selection
+            const courseSelect = document.getElementById('courseSelect');
+            const scheduleSelect = document.getElementById('scheduleSelect');
+            const studyType = document.querySelector('input[name="studyType"]:checked');
+            
+            if (!courseSelect.value) {
                 document.getElementById('courseError').style.display = 'block';
                 isValid = false;
             }
             
-            if (!document.getElementById('scheduleSelect').value) {
+            if (!scheduleSelect.value) {
                 document.getElementById('scheduleError').style.display = 'block';
                 isValid = false;
             }
             
-            const studyType = document.querySelector('input[name="studyType"]:checked');
             if (!studyType) {
                 document.getElementById('studyTypeError').style.display = 'block';
                 isValid = false;
             }
             
-            if (isValid) showTab('payment');
+            if (isValid) {
+                showTab('payment');
+            } else {
+                // Scroll to first error
+                const firstError = document.querySelector('.error-message[style*="display: block"]');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+            
             return isValid;
         }
         
-        // Setup form validation and submission
-        function setupFormValidation() {
+        // Handle form submission
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            // Validate payment method
+            if (!selectedPaymentMethod) {
+                document.getElementById('paymentError').style.display = 'block';
+                document.getElementById('paymentError').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            function finishRegistration() {
+    const regNumber = "REG-" + Math.floor(Math.random() * 900000 + 100000);
+
+    // Show success message on the same page
+    document.getElementById("successMessage").style.display = "block";
+    document.getElementById("confirmationNumber").innerText =
+        "رقم التسجيل: " + regNumber;
+
+    // Open a new tab and show the number
+    showRegistrationNumberInNewTab(regNumber);
+}
+
+            // Validate all tabs
+            if (!validatePersonalTab() || !validateCourseTab()) {
+                showTab('personal');
+                return;
+            }
+            
+            // Get form data
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                fatherName: document.getElementById('fatherName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                age: document.getElementById('age').value,
+                gender: document.getElementById('gender').value,
+                address: document.getElementById('address').value,
+                education: document.getElementById('education').value,
+                course: document.getElementById('courseSelect').value,
+                courseName: document.getElementById('courseSelect').options[document.getElementById('courseSelect').selectedIndex].text,
+                schedule: document.getElementById('scheduleSelect').value,
+                studyType: document.querySelector('input[name="studyType"]:checked').value,
+                paymentMethod: selectedPaymentMethod,
+                notes: document.getElementById('notes').value,
+                timestamp: new Date().toLocaleString('ar-SA'),
+                registrationId: 'REG-' + Date.now() + '-' + Math.floor(Math.random() * 1000)
+            };
+            function showRegistrationNumberInNewTab(regNumber) {
+    const newTab = window.open('', '_blank');
+    newTab.document.write(`
+        <html lang="ar" dir="rtl">
+        <head>
+            <title>رقم التسجيل</title>
+            <style>
+                body {
+                    font-family: 'Amiri', serif;
+                    text-align: center;
+                    padding-top: 100px;
+                    background: #f4f4f4;
+                }
+                .box {
+                    background: white;
+                    padding: 40px;
+                    margin: auto;
+                    width: 60%;
+                    border-radius: 15px;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                    font-size: 22px;
+                }
+                h2 {
+                    color: #2c3e50;
+                }
+                .num {
+                    font-size: 35px;
+                    color: #27ae60;
+                    margin-top: 20px;
+                    font-weight: bold;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="box">
+                <h2>تم تسجيلك بنجاح</h2>
+                <p>رقم التسجيل الخاص بك هو:</p>
+                <div class="num">${regNumber}</div>
+            </div>
+        </body>
+        </html>
+    `);
+}
+
+            
+            // Save to localStorage
+            localStorage.setItem('lastRegistration', JSON.stringify(formData));
+            
+            // Save to registrations array
+            let registrations = JSON.parse(localStorage.getItem('registrations') || '[]');
+            registrations.push(formData);
+            localStorage.setItem('registrations', JSON.stringify(registrations));
+            
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('confirmationNumber').textContent = `رقم التسجيل: ${formData.registrationId}`;
+            
+            // Scroll to success message
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+            
+            // Reset form after 5 seconds
+            setTimeout(() => {
+                document.getElementById('registrationForm').reset();
+                document.getElementById('successMessage').style.display = 'none';
+                showTab('personal');
+                selectedPaymentMethod = '';
+                
+                // Reset payment selection
+                document.querySelectorAll('.payment-method').forEach(pm => {
+                    pm.classList.remove('selected');
+                });
+                
+                document.getElementById('bankDetails').style.display = 'none';
+                document.getElementById('mobilePaymentDetails').style.display = 'none';
+                document.getElementById('cashDetails').style.display = 'none';
+            }, 5000);
+            
+            // Here you can also send the data to your server
+            // sendToServer(formData);
+        }
+        
+        // Utility functions
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function isValidPhone(phone) {
+            const re = /^[0-9]{10,15}$/;
+            return re.test(phone);
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCourses();
+            
+            // Add form submit event listener
             const form = document.getElementById('registrationForm');
+            if (form) {
+                form.addEventListener('submit', handleFormSubmit);
+            }
             
             // Add real-time validation
             const inputs = document.querySelectorAll('input, select, textarea');
             inputs.forEach(input => {
                 input.addEventListener('blur', function() {
-                    validateField(this);
+                    const errorElement = document.getElementById(`${this.id}Error`);
+                    if (errorElement) {
+                        if (!this.value.trim() && this.hasAttribute('required')) {
+                            errorElement.style.display = 'block';
+                        } else {
+                            errorElement.style.display = 'none';
+                        }
+                    }
                 });
+                
                 input.addEventListener('input', function() {
                     const errorElement = document.getElementById(`${this.id}Error`);
-                    if (errorElement) errorElement.style.display = 'none';
+                    if (errorElement) {
+                        errorElement.style.display = 'none';
+                    }
                 });
             });
-            
-            // Handle form submission
-            form.addEventListener('submit', async function(event) {
-                event.preventDefault();
-                
-                // Validate all tabs
-                if (!validatePersonalTab() || !validateCourseTab()) {
-                    alert('الرجاء إكمال جميع الحقول المطلوبة');
-                    return;
-                }
-                
-                // Validate payment method
-                if (!selectedPaymentMethod) {
-                    document.getElementById('paymentError').style.display = 'block';
-                    alert('الرجاء اختيار طريقة الدفع');
-                    return;
-                }
-                
-                // Collect form data
-                const formData = new FormData(this);
-                
-                try {
-                    // Send to Formspree
-                    const response = await fetch('https://formspree.io/f/xrbykjvz', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    });
-                    
-                    if (response.ok) {
-                        // Show success message
-                        const registrationId = 'REG-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-                        document.getElementById('successMessage').style.display = 'block';
-                        document.getElementById('confirmationNumber').textContent = `رقم التسجيل: ${registrationId}`;
-                        
-                        // Scroll to success message
-                        document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
-                        
-                        // Store in localStorage (backup)
-                        localStorage.setItem('lastRegistration', JSON.stringify(Object.fromEntries(formData)));
-                        
-                        // Reset form after 5 seconds
-                        setTimeout(() => {
-                            form.reset();
-                            document.getElementById('successMessage').style.display = 'none';
-                            showTab('personal');
-                            selectedPaymentMethod = '';
-                            document.querySelectorAll('.payment-method').forEach(pm => pm.classList.remove('selected'));
-                            document.getElementById('bankDetails').style.display = 'none';
-                            document.getElementById('mobilePaymentDetails').style.display = 'none';
-                            document.getElementById('cashDetails').style.display = 'none';
-                        }, 5000);
-                    } else {
-                        alert('حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى.');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.');
-                }
-            });
-        }
+        });
         
-        function validateField(field) {
-            const errorElement = document.getElementById(`${field.id}Error`);
-            if (!errorElement) return;
-            
-            let isValid = true;
-            let errorMessage = '';
-            
-            switch (field.id) {
-                case 'email':
-                    isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value);
-                    errorMessage = 'الرجاء إدخال بريد إلكتروني صحيح';
-                    break;
-                case 'phone':
-                    isValid = /^[0-9]{10,15}$/.test(field.value);
-                    errorMessage = 'الرجاء إدخال رقم هاتف صحيح (10-15 رقم)';
-                    break;
-                case 'age':
-                    isValid = field.value >= 15 && field.value <= 80;
-                    errorMessage = 'الرجاء إدخال عمر بين 15 و 80 سنة';
-                    break;
-                default:
-                    isValid = field.value.trim() !== '';
-                    errorMessage = 'هذا الحقل مطلوب';
-            }
-            
-            if (!isValid && field.hasAttribute('required')) {
-                errorElement.textContent = errorMessage;
-                errorElement.style.display = 'block';
-            } else {
-                errorElement.style.display = 'none';
-            }
-        }
-        
-        // Navigation functions
+        // Navigation functions (if not in script.js)
         function toggleMenu() {
             const navLinks = document.getElementById('navLinks');
             navLinks.classList.toggle('show');
@@ -894,7 +1053,7 @@
         
         function changeLanguage(lang) {
             localStorage.setItem('language', lang);
-            window.location.href = `register-${lang}.html`;
+            location.reload();
         }
     </script>
 </body>
