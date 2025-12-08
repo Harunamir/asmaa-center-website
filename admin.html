@@ -1,0 +1,1032 @@
+<!-- Create admin.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - مركز أسماء</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #c0392b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: #f5f6fa;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: var(--primary);
+            color: white;
+            padding: 20px 0;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            margin-top: 20px;
+        }
+        
+        .sidebar-menu li {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu li:hover,
+        .sidebar-menu li.active {
+            background: rgba(255,255,255,0.1);
+            border-right: 4px solid var(--accent);
+        }
+        
+        .sidebar-menu i {
+            width: 25px;
+            margin-left: 10px;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .top-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-card i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .stat-card p {
+            color: #666;
+        }
+        
+        .card-1 { border-top: 4px solid #3498db; }
+        .card-2 { border-top: 4px solid #2ecc71; }
+        .card-3 { border-top: 4px solid #e74c3c; }
+        .card-4 { border-top: 4px solid #f39c12; }
+        
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-confirmed { background: #d4edda; color: #155724; }
+        .badge-rejected { background: #f8d7da; color: #721c24; }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <h2><i class="fas fa-lock"></i> دخول لوحة التحكم</h2>
+        <p style="color: #666; margin: 20px 0;">أدخل بيانات الدخول للوصول إلى لوحة التحكم</p>
+        
+        <div style="text-align: right; margin: 20px 0;">
+            <label for="username">اسم المستخدم</label>
+            <input type="text" id="username" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+            
+            <label for="password">كلمة المرور</label>
+            <input type="password" id="password" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        
+        <button onclick="login()" style="background: var(--primary); color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; width: 100%;">
+            <i class="fas fa-sign-in-alt"></i> دخول
+        </button>
+        
+        <p id="loginError" style="color: red; margin-top: 10px; display: none;">
+            <i class="fas fa-exclamation-circle"></i> اسم المستخدم أو كلمة المرور غير صحيحة
+        </p>
+    </div>
+    
+    <!-- Admin Dashboard (Hidden until login) -->
+    <div id="adminDashboard" class="admin-container" style="display: none;">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-mosque"></i> مركز أسماء</h2>
+                <p style="color: #aaa; font-size: 0.9rem; margin-top: 5px;">لوحة التحكم</p>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li class="active" onclick="showSection('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i> لوحة التحكم
+                </li>
+                <li onclick="showSection('registrations')">
+                    <i class="fas fa-users"></i> التسجيلات
+                </li>
+                <li onclick="showSection('courses')">
+                    <i class="fas fa-book"></i> إدارة الدورات
+                </li>
+                <li onclick="showSection('reports')">
+                    <i class="fas fa-chart-bar"></i> التقارير
+                </li>
+                <li onclick="showSection('settings')">
+                    <i class="fas fa-cog"></i> الإعدادات
+                </li>
+                <li onclick="logout()" style="color: #ff6b6b;">
+                    <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div>
+                    <h2 id="sectionTitle">لوحة التحكم</h2>
+                    <p id="sectionSubtitle" style="color: #666;">نظرة عامة على النظام</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span id="currentDate" style="color: #666;"></span>
+                    <button onclick="syncData()" class="btn btn-primary">
+                        <i class="fas fa-sync-alt"></i> تحديث البيانات
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Dashboard Section -->
+            <div id="dashboardSection">
+                <div class="stats-grid">
+                    <div class="stat-card card-1">
+                        <i class="fas fa-users" style="color: #3498db;"></i>
+                        <h3 id="totalRegistrations">0</h3>
+                        <p>إجمالي التسجيلات</p>
+                    </div>
+                    <div class="stat-card card-2">
+                        <i class="fas fa-check-circle" style="color: #2ecc71;"></i>
+                        <h3 id="confirmedRegistrations">0</h3>
+                        <p>مسجلين مؤكدين</p>
+                    </div>
+                    <div class="stat-card card-3">
+                        <i class="fas fa-clock" style="color: #e74c3c;"></i>
+                        <h3 id="pendingRegistrations">0</h3>
+                        <p>في انتظار التأكيد</p>
+                    </div>
+                    <div class="stat-card card-4">
+                        <i class="fas fa-book" style="color: #f39c12;"></i>
+                        <h3 id="totalCourses">5</h3>
+                        <p>عدد الدورات</p>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-top: 30px;">
+                    <div class="table-container">
+                        <h3><i class="fas fa-history"></i> آخر التسجيلات</h3>
+                        <div id="recentRegistrations">
+                            <!-- Will be filled by JavaScript -->
+                            <p style="text-align: center; color: #666; padding: 20px;">
+                                جاري تحميل البيانات...
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <h3><i class="fas fa-chart-pie"></i> التوزيع حسب الدورة</h3>
+                        <div id="courseDistribution">
+                            <!-- Will be filled by JavaScript -->
+                            <p style="text-align: center; color: #666; padding: 20px;">
+                                جاري تحميل البيانات...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Registrations Section -->
+            <div id="registrationsSection" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3><i class="fas fa-users"></i> إدارة التسجيلات</h3>
+                    <div class="export-buttons">
+                        <button onclick="exportToExcel()" class="btn btn-success">
+                            <i class="fas fa-file-excel"></i> تصدير لإكسل
+                        </button>
+                        <button onclick="exportToPDF()" class="btn btn-danger">
+                            <i class="fas fa-file-pdf"></i> تصدير لـ PDF
+                        </button>
+                        <button onclick="showAddRegistration()" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> إضافة تسجيل يدوي
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <div style="margin-bottom: 20px;">
+                        <input type="text" id="searchRegistrations" placeholder="🔍 بحث باسم أو بريد أو رقم تسجيل..." 
+                               style="width: 300px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <select id="filterStatus" onchange="filterRegistrations()" style="padding: 10px; margin-right: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                            <option value="">جميع الحالات</option>
+                            <option value="pending">في الانتظار</option>
+                            <option value="confirmed">مؤكد</option>
+                            <option value="rejected">مرفوض</option>
+                        </select>
+                        <select id="filterCourse" onchange="filterRegistrations()" style="padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                            <option value="">جميع الدورات</option>
+                            <!-- Will be filled by JavaScript -->
+                        </select>
+                    </div>
+                    
+                    <div id="registrationsTable">
+                        <!-- Will be filled by JavaScript -->
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                        <div id="paginationInfo"></div>
+                        <div>
+                            <button onclick="prevPage()" class="btn" style="margin-right: 5px;">السابق</button>
+                            <button onclick="nextPage()" class="btn btn-primary">التالي</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Courses Section -->
+            <div id="coursesSection" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3><i class="fas fa-book"></i> إدارة الدورات</h3>
+                    <button onclick="showAddCourse()" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> إضافة دورة جديدة
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <div id="coursesTable">
+                        <!-- Will be filled by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reports Section -->
+            <div id="reportsSection" style="display: none;">
+                <h3><i class="fas fa-chart-bar"></i> التقارير والإحصائيات</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                    <div class="table-container">
+                        <h4>تقرير التسجيلات الشهري</h4>
+                        <canvas id="monthlyChart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div class="table-container">
+                        <h4>توزيع طرق الدفع</h4>
+                        <canvas id="paymentChart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div class="table-container" style="grid-column: span 2;">
+                        <h4>تقرير مفصل</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                                <h5>أكثر الدورات طلباً</h5>
+                                <div id="topCourses"></div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                                <h5>أوقات الدراسة المفضلة</h5>
+                                <div id="studySchedule"></div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                                <h5>التوزيع العمري</h5>
+                                <div id="ageDistribution"></div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                                <h5>الجنس</h5>
+                                <div id="genderDistribution"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Section -->
+            <div id="settingsSection" style="display: none;">
+                <h3><i class="fas fa-cog"></i> إعدادات النظام</h3>
+                
+                <div class="table-container" style="margin-top: 20px;">
+                    <h4>إعدادات الموقع</h4>
+                    <div class="form-group">
+                        <label>عنوان البريد الإلكتروني للإشعارات</label>
+                        <input type="email" id="adminEmail" value="asmaacenter@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>رقم الهاتف للتواصل</label>
+                        <input type="text" id="adminPhone" value="08148301746">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>تفعيل الإشعارات بالبريد</label>
+                        <select id="emailNotifications">
+                            <option value="yes">نعم</option>
+                            <option value="no">لا</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>تفعيل الإشعارات بالواتساب</label>
+                        <select id="whatsappNotifications">
+                            <option value="yes">نعم</option>
+                            <option value="no">لا</option>
+                        </select>
+                    </div>
+                    
+                    <button onclick="saveSettings()" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ الإعدادات
+                    </button>
+                </div>
+                
+                <div class="table-container" style="margin-top: 20px;">
+                    <h4>أدوات النظام</h4>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="backupData()" class="btn btn-success">
+                            <i class="fas fa-download"></i> نسخة احتياطية
+                        </button>
+                        <button onclick="restoreData()" class="btn btn-warning">
+                            <i class="fas fa-upload"></i> استعادة نسخة
+                        </button>
+                        <button onclick="clearAllData()" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> حذف جميع البيانات
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <div id="registrationModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-user-plus"></i> تفاصيل التسجيل</h3>
+            <div id="registrationDetails"></div>
+            <div style="margin-top: 20px; text-align: left;">
+                <button onclick="closeModal()" class="btn" style="margin-left: 10px;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="addRegistrationModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-user-plus"></i> إضافة تسجيل يدوي</h3>
+            <!-- Form for manual registration -->
+            <div id="manualRegistrationForm"></div>
+        </div>
+    </div>
+    
+    <div id="addCourseModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-book"></i> إضافة دورة جديدة</h3>
+            <!-- Form for adding course -->
+            <div id="addCourseForm"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Admin Configuration
+        const ADMIN_USERNAME = "amirmuhammadabdullahi@gmail.com";
+        const ADMIN_PASSWORD = "bms/ant/20/1076"; // Change this!
+        
+        // Global variables
+        let currentSection = 'dashboard';
+        let registrations = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        
+        // Login function
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'flex';
+                
+                // Set date
+                const now = new Date();
+                document.getElementById('currentDate').textContent = 
+                    now.toLocaleDateString('ar-SA') + ' - ' + now.toLocaleTimeString('ar-SA');
+                
+                // Load data
+                loadData();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            if (confirm('هل تريد تسجيل الخروج؟')) {
+                document.getElementById('adminDashboard').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'block';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('loginError').style.display = 'none';
+            }
+        }
+        
+        // Show section
+        function showSection(section) {
+            // Hide all sections
+            document.getElementById('dashboardSection').style.display = 'none';
+            document.getElementById('registrationsSection').style.display = 'none';
+            document.getElementById('coursesSection').style.display = 'none';
+            document.getElementById('reportsSection').style.display = 'none';
+            document.getElementById('settingsSection').style.display = 'none';
+            
+            // Remove active class from all menu items
+            document.querySelectorAll('.sidebar-menu li').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(section + 'Section').style.display = 'block';
+            
+            // Add active class to clicked menu item
+            event.target.closest('li').classList.add('active');
+            
+            // Update section title
+            const titles = {
+                'dashboard': 'لوحة التحكم',
+                'registrations': 'إدارة التسجيلات',
+                'courses': 'إدارة الدورات',
+                'reports': 'التقارير والإحصائيات',
+                'settings': 'إعدادات النظام'
+            };
+            
+            const subtitles = {
+                'dashboard': 'نظرة عامة على النظام',
+                'registrations': 'عرض وإدارة جميع التسجيلات',
+                'courses': 'إدارة الدورات والبرامج التعليمية',
+                'reports': 'تقارير وتحليلات التسجيلات',
+                'settings': 'تعديل إعدادات النظام'
+            };
+            
+            document.getElementById('sectionTitle').textContent = titles[section];
+            document.getElementById('sectionSubtitle').textContent = subtitles[section];
+            currentSection = section;
+            
+            // Load section-specific data
+            if (section === 'registrations') {
+                loadRegistrationsTable();
+            } else if (section === 'courses') {
+                loadCoursesTable();
+            } else if (section === 'reports') {
+                loadReports();
+            }
+        }
+        
+        // Load data from localStorage
+        function loadData() {
+            // Load registrations
+            registrations = JSON.parse(localStorage.getItem('registrations') || '[]');
+            
+            // Update stats
+            updateStats();
+            
+            // Load recent registrations
+            loadRecentRegistrations();
+            
+            // Load course distribution
+            loadCourseDistribution();
+        }
+        
+        // Update statistics
+        function updateStats() {
+            const total = registrations.length;
+            const confirmed = registrations.filter(r => r.status === 'confirmed').length;
+            const pending = registrations.filter(r => !r.status || r.status === 'pending').length;
+            
+            document.getElementById('totalRegistrations').textContent = total;
+            document.getElementById('confirmedRegistrations').textContent = confirmed;
+            document.getElementById('pendingRegistrations').textContent = pending;
+        }
+        
+        // Load recent registrations
+        function loadRecentRegistrations() {
+            const recent = registrations.slice(-5).reverse();
+            let html = '<table>';
+            html += '<thead><tr><th>الاسم</th><th>الدورة</th><th>التاريخ</th><th>الحالة</th><th>الإجراءات</th></tr></thead>';
+            html += '<tbody>';
+            
+            recent.forEach(reg => {
+                html += `<tr>
+                    <td>${reg.fullName}</td>
+                    <td>${reg.course}</td>
+                    <td>${reg.timestamp || 'غير محدد'}</td>
+                    <td><span class="badge badge-${reg.status || 'pending'}">${reg.status || 'في الانتظار'}</span></td>
+                    <td class="action-buttons">
+                        <button onclick="viewRegistration('${reg.registrationId}')" class="btn btn-primary" style="padding: 5px 10px;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('recentRegistrations').innerHTML = html;
+        }
+        
+        // Load course distribution
+        function loadCourseDistribution() {
+            const courses = {};
+            registrations.forEach(reg => {
+                courses[reg.course] = (courses[reg.course] || 0) + 1;
+            });
+            
+            let html = '<table>';
+            html += '<thead><tr><th>الدورة</th><th>عدد المسجلين</th><th>النسبة</th></tr></thead>';
+            html += '<tbody>';
+            
+            for (const [course, count] of Object.entries(courses)) {
+                const percentage = ((count / registrations.length) * 100).toFixed(1);
+                html += `<tr>
+                    <td>${course}</td>
+                    <td>${count}</td>
+                    <td>${percentage}%</td>
+                </tr>`;
+            }
+            
+            html += '</tbody></table>';
+            document.getElementById('courseDistribution').innerHTML = html;
+        }
+        
+        // Load registrations table with pagination
+        function loadRegistrationsTable() {
+            // Filter registrations
+            let filtered = [...registrations];
+            const searchTerm = document.getElementById('searchRegistrations')?.value.toLowerCase() || '';
+            const statusFilter = document.getElementById('filterStatus')?.value || '';
+            const courseFilter = document.getElementById('filterCourse')?.value || '';
+            
+            if (searchTerm) {
+                filtered = filtered.filter(reg => 
+                    reg.fullName?.toLowerCase().includes(searchTerm) ||
+                    reg.email?.toLowerCase().includes(searchTerm) ||
+                    reg.registrationId?.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (statusFilter) {
+                filtered = filtered.filter(reg => reg.status === statusFilter);
+            }
+            
+            if (courseFilter) {
+                filtered = filtered.filter(reg => reg.course === courseFilter);
+            }
+            
+            // Pagination
+            const totalPages = Math.ceil(filtered.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageRegistrations = filtered.slice(startIndex, endIndex);
+            
+            // Generate table
+            let html = '<table>';
+            html += '<thead><tr><th>رقم التسجيل</th><th>الاسم</th><th>البريد</th><th>الهاتف</th><th>الدورة</th><th>التاريخ</th><th>الحالة</th><th>الإجراءات</th></tr></thead>';
+            html += '<tbody>';
+            
+            if (pageRegistrations.length === 0) {
+                html += `<tr><td colspan="8" style="text-align: center; padding: 20px; color: #666;">لا توجد تسجيلات</td></tr>`;
+            } else {
+                pageRegistrations.forEach(reg => {
+                    html += `<tr>
+                        <td>${reg.registrationId}</td>
+                        <td>${reg.fullName}</td>
+                        <td>${reg.email}</td>
+                        <td>${reg.phone}</td>
+                        <td>${reg.course}</td>
+                        <td>${reg.timestamp || 'غير محدد'}</td>
+                        <td><span class="badge badge-${reg.status || 'pending'}">${reg.status || 'في الانتظار'}</span></td>
+                        <td class="action-buttons">
+                            <button onclick="viewRegistration('${reg.registrationId}')" class="btn btn-primary" title="عرض">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="editRegistration('${reg.registrationId}')" class="btn btn-warning" title="تعديل">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="confirmRegistration('${reg.registrationId}')" class="btn btn-success" title="تأكيد">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button onclick="deleteRegistration('${reg.registrationId}')" class="btn btn-danger" title="حذف">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+                });
+            }
+            
+            html += '</tbody></table>';
+            document.getElementById('registrationsTable').innerHTML = html;
+            
+            // Update pagination info
+            document.getElementById('paginationInfo').innerHTML = 
+                `عرض ${startIndex + 1} إلى ${Math.min(endIndex, filtered.length)} من ${filtered.length} تسجيل`;
+        }
+        
+        // View registration details
+        function viewRegistration(regId) {
+            const reg = registrations.find(r => r.registrationId === regId);
+            if (!reg) return;
+            
+            let html = `
+                <div class="form-group">
+                    <label>رقم التسجيل:</label>
+                    <input type="text" value="${reg.registrationId}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>الاسم الكامل:</label>
+                    <input type="text" value="${reg.fullName}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>البريد الإلكتروني:</label>
+                    <input type="email" value="${reg.email}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف:</label>
+                    <input type="text" value="${reg.phone}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>الدورة:</label>
+                    <input type="text" value="${reg.course}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>طريقة الدفع:</label>
+                    <input type="text" value="${reg.paymentMethod}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>التاريخ:</label>
+                    <input type="text" value="${reg.timestamp}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>الحالة:</label>
+                    <select id="editStatus">
+                        <option value="pending" ${(!reg.status || reg.status === 'pending') ? 'selected' : ''}>في الانتظار</option>
+                        <option value="confirmed" ${reg.status === 'confirmed' ? 'selected' : ''}>مؤكد</option>
+                        <option value="rejected" ${reg.status === 'rejected' ? 'selected' : ''}>مرفوض</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>ملاحظات:</label>
+                    <textarea id="editNotes" rows="3">${reg.notes || ''}</textarea>
+                </div>
+                <button onclick="updateRegistration('${regId}')" class="btn btn-primary">
+                    <i class="fas fa-save"></i> حفظ التغييرات
+                </button>
+            `;
+            
+            document.getElementById('registrationDetails').innerHTML = html;
+            document.getElementById('registrationModal').style.display = 'block';
+        }
+        
+        // Update registration
+        function updateRegistration(regId) {
+            const status = document.getElementById('editStatus').value;
+            const notes = document.getElementById('editNotes').value;
+            
+            const index = registrations.findIndex(r => r.registrationId === regId);
+            if (index !== -1) {
+                registrations[index].status = status;
+                registrations[index].notes = notes;
+                localStorage.setItem('registrations', JSON.stringify(registrations));
+                closeModal();
+                loadRegistrationsTable();
+                updateStats();
+            }
+        }
+        
+        // Confirm registration
+        function confirmRegistration(regId) {
+            if (confirm('هل تريد تأكيد هذا التسجيل؟')) {
+                const index = registrations.findIndex(r => r.registrationId === regId);
+                if (index !== -1) {
+                    registrations[index].status = 'confirmed';
+                    localStorage.setItem('registrations', JSON.stringify(registrations));
+                    loadRegistrationsTable();
+                    updateStats();
+                }
+            }
+        }
+        
+        // Delete registration
+        function deleteRegistration(regId) {
+            if (confirm('هل أنت متأكد من حذف هذا التسجيل؟')) {
+                const index = registrations.findIndex(r => r.registrationId === regId);
+                if (index !== -1) {
+                    registrations.splice(index, 1);
+                    localStorage.setItem('registrations', JSON.stringify(registrations));
+                    loadRegistrationsTable();
+                    updateStats();
+                }
+            }
+        }
+        
+        // Export to Excel
+        function exportToExcel() {
+            let csv = 'رقم التسجيل,الاسم الكامل,البريد الإلكتروني,رقم الهاتف,الدورة,طريقة الدفع,التاريخ,الحالة,الملاحظات\n';
+            
+            registrations.forEach(reg => {
+                csv += `"${reg.registrationId || ''}","${reg.fullName || ''}","${reg.email || ''}","${reg.phone || ''}",`;
+                csv += `"${reg.course || ''}","${reg.paymentMethod || ''}","${reg.timestamp || ''}","${reg.status || 'pending'}","${reg.notes || ''}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `asmaa-registrations-${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Export to PDF
+        function exportToPDF() {
+            // This would require a PDF library like jsPDF
+            alert('ميزة تصدير PDF تحت التطوير. استخدم تصدير Excel في الوقت الحالي.');
+        }
+        
+        // Sync data (for future integration with Formspree/Google Sheets)
+        function syncData() {
+            alert('جاري مزامنة البيانات...');
+            // Here you would add code to fetch from Formspree/Google Sheets API
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('registrationModal').style.display = 'none';
+            document.getElementById('addRegistrationModal').style.display = 'none';
+            document.getElementById('addCourseModal').style.display = 'none';
+        }
+        
+        // Show add registration modal
+        function showAddRegistration() {
+            let html = `
+                <div class="form-group">
+                    <label>الاسم الكامل *</label>
+                    <input type="text" id="manualFullName" required>
+                </div>
+                <div class="form-group">
+                    <label>البريد الإلكتروني *</label>
+                    <input type="email" id="manualEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف *</label>
+                    <input type="tel" id="manualPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>الدورة *</label>
+                    <select id="manualCourse" required>
+                        <option value="">اختر دورة</option>
+                        <option value="quran">حفظ القرآن الكريم</option>
+                        <option value="fiqh">الفقه للمبتدئين</option>
+                        <option value="aqeedah">العقيدة الإسلامية</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>طريقة الدفع</label>
+                    <select id="manualPayment">
+                        <option value="cash">نقداً في المركز</option>
+                        <option value="bank">تحويل بنكي</option>
+                        <option value="mobile">محفظة إلكترونية</option>
+                    </select>
+                </div>
+                <div style="margin-top: 20px; text-align: left;">
+                    <button onclick="closeModal()" class="btn" style="margin-left: 10px;">إلغاء</button>
+                    <button onclick="saveManualRegistration()" class="btn btn-primary">حفظ</button>
+                </div>
+            `;
+            
+            document.getElementById('manualRegistrationForm').innerHTML = html;
+            document.getElementById('addRegistrationModal').style.display = 'block';
+        }
+        
+        // Save manual registration
+        function saveManualRegistration() {
+            const regId = 'MANUAL-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+            const registration = {
+                registrationId: regId,
+                fullName: document.getElementById('manualFullName').value,
+                email: document.getElementById('manualEmail').value,
+                phone: document.getElementById('manualPhone').value,
+                course: document.getElementById('manualCourse').value,
+                paymentMethod: document.getElementById('manualPayment').value,
+                timestamp: new Date().toLocaleString('ar-SA'),
+                status: 'confirmed'
+            };
+            
+            registrations.push(registration);
+            localStorage.setItem('registrations', JSON.stringify(registrations));
+            
+            closeModal();
+            loadRegistrationsTable();
+            updateStats();
+            alert('تم إضافة التسجيل بنجاح!');
+        }
+        
+        // Filter registrations
+        function filterRegistrations() {
+            currentPage = 1;
+            loadRegistrationsTable();
+        }
+        
+        // Pagination
+        function nextPage() {
+            currentPage++;
+            loadRegistrationsTable();
+        }
+        
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                loadRegistrationsTable();
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            };
+        });
+    </script>
+</body>
+</html>
